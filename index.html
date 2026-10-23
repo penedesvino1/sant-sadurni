@@ -38,7 +38,7 @@
   html{-webkit-text-size-adjust:100%}
   body{
     margin:0;
-    background:var(--paper);
+    background:#e3d7c4;
     color:var(--ink);
     font-family:"Lora",Georgia,serif;
     font-size:18px;
@@ -262,10 +262,54 @@
   .sitefoot .rights{color:#d8cabb;margin:0 0 4px}
   .sitefoot a{color:#e9c9b4;text-decoration:none;border-bottom:1px solid rgba(233,201,180,.4)}
   .sitefoot a:hover{color:#fff}
+
+  /* ---------- оболочка: комфортная ширина на десктопе (на телефоне без изменений) ---------- */
+  .shell{max-width:760px;margin:0 auto;background:var(--paper);box-shadow:0 0 50px rgba(42,33,28,.14)}
+
+  /* мягкий ориентир у входа — тихая подсказка, не кнопка */
+  .orient{
+    font-family:"Inter",sans-serif;font-size:15px;line-height:1.55;color:var(--ink-soft);
+    background:rgba(193,90,46,.08);border-radius:10px;padding:14px 16px;margin:28px 0;
+  }
+  .orient a{color:var(--bordo);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(111,29,43,.4)}
+  .orient a:hover{color:var(--bordo-deep)}
+
+  /* инфо-строка в начале шага: где + суть */
+  .meta{
+    font-family:"Inter",sans-serif;font-size:13.5px;line-height:1.5;color:var(--ink-soft);
+    display:flex;flex-wrap:wrap;gap:5px 18px;
+    border-left:3px solid var(--terra);padding:9px 0 9px 14px;margin:2px 0 18px;
+  }
+  .meta b{color:var(--ink);font-weight:600}
+
+  /* акцентная цитата-врезка */
+  .pullq{
+    font-family:"Playfair Display",serif;font-style:italic;font-weight:600;
+    font-size:clamp(23px,6.2vw,31px);line-height:1.26;color:var(--bordo);
+    text-align:center;margin:50px auto;max-width:92%;
+  }
+
+  /* подпись-кредиты на фото (лицензия CC) */
+  .credits{font-size:11.5px;line-height:1.5;color:#a1917f;max-width:560px;margin:18px auto 0}
+  .credits a{color:#c9ab97;border-bottom:none;text-decoration:underline}
+  .credits a:hover{color:#e9c9b4}
+
+  /* ---------- лайтбокс: увеличение фото по тапу/клику ---------- */
+  .lb{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;
+      align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:24px}
+  .lb[hidden]{display:none}   /* важно: иначе скрытый слой перекрывает страницу */
+  .lb__img{border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  .lb.is-full .lb__img{max-width:95vw;max-height:95vh}        /* смартфон: крупно */
+  .lb.is-modest{background:rgba(0,0,0,.6)}
+  .lb.is-modest .lb__img{max-width:860px;max-height:80vh}      /* ПК, серия: умеренно */
+  @media (pointer:coarse),(max-width:768px){ figure img,.strip img{cursor:zoom-in} }
+  @media (pointer:fine) and (min-width:769px){ .strip img{cursor:zoom-in} }
 </style>
 </head>
 
 <body>
+
+<div class="shell">
 
 <!-- ===== ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ =====
      RU активна. EN / ES / CA пока «скоро» (span.lang-soon).
@@ -302,6 +346,8 @@
 
     <p>И сразу главное, ради чего всё: это не сухой маршрут. Это совет. Ниже будут ссылки, телефоны, часы — собери свой день сам, под свой ритм. Гид не ведёт за руку. Он показывает, как смотреть.</p>
 
+    <p class="orient">Нужна только практика — часы, адреса, карты? Она собрана внизу: <a href="#praktika">↓ перейти к практике</a>. А хочешь прожить этот день по-настоящему — просто читай дальше.</p>
+
     <p class="rubric">Прежде чем ехать</p>
 
     <p>Собираясь в дорогу, мы обычно что делаем? Ну конечно же — спрашиваем поисковик или, как в последнее время принято, ChatGPT: «Что посмотреть в Sant Sadurní?». И ответ будет правильным — и полезным, но похожим на Википедию. Винодельни, экскурсии, мировая столица кавы. Это правда — вино здесь главная ось. Но если остановиться на этом, ты увидишь только витрину.</p>
@@ -320,12 +366,21 @@
         <span class="stop__num">①</span>
         <h2 class="stop__title">Масштаб<small>Первое впечатление</small></h2>
       </div>
-      <figure class="port">
-        <img src="images/01-street-hill.jpg" width="1125" height="1500" loading="lazy"
-             alt="Улица Sant Sadurní, поднимающаяся к холмам Пенедес">
+      <div class="meta"><span>📍 <b>Где:</b> напротив ж/д станции</span><span>💡 <b>Суть:</b> почувствовать масштаб</span></div>
+      <figure>
+        <img src="images/freixenet-panorama.jpg" width="1500" height="985" loading="lazy"
+             alt="Панорама Caves Freixenet и Sant Sadurní d'Anoia с горой Монтсеррат на фоне">
+      </figure>
+      <figure>
+        <img src="images/freixenet-facade.jpg" width="1500" height="1125" loading="lazy"
+             alt="Главный фасад Caves Freixenet с модернистской аркой и надписью CAVAS FREIXENET">
       </figure>
       <p>Выходишь со станции — и сразу упираешься в гиганта Freixenet, крупнейшего производителя игристого.</p>
       <p>Не иди на тур ради галочки. Посмотри на этот фасад иначе — как на памятник чистой человеческой дерзости. Конец XIX века, маленькая деревня решила бросить вызов самой Шампани: они у неё научились, они состоялись и они же выстояли. Масштаб гигантов не враг семейным погребам: именно он дал региону силу и вывел каву на мировую арену. Запомни это чувство масштаба — позже ты спустишься в его тихую противоположность, и одно без другого просто не живёт.</p>
+      <figure>
+        <img src="images/freixenet-bridge.jpg" width="1500" height="1125" loading="lazy"
+             alt="Caves Freixenet, вид от моста через риеру Лаверно">
+      </figure>
       <p>Перейди мост и остановись. В лицо сразу ударит густой, тёплый запах сосны и нагретого на солнце кустарника. Оглядись: ты в самом сердце долины Пенедес. К югу прибрежный массив Гарраф заслоняет её от Средиземного моря, к северу холмы поднимаются к суровому хребту Монтсеррат, а лоза взбирается по склонам — от почти уровня моря до сотен метров вверх. Это не курорт и не пригород Барселоны. Это сама земля, терруар, на которой растёт то, что позже окажется в твоём бокале. Постой, подыши. Ты здесь.</p>
     </div>
 
@@ -335,6 +390,7 @@
         <span class="stop__num">②</span>
         <h2 class="stop__title">Утро как местный<small>Тихий вход</small></h2>
       </div>
+      <div class="meta"><span>📍 <b>Где:</b> центр, у ратуши (Ajuntament)</span><span>💡 <b>Суть:</b> войти в город тихо</span></div>
       <figure class="port">
         <img src="images/02-bollard-street.jpg" width="1125" height="1500" loading="lazy"
              alt="Тротуарные отбойники в форме винных пробок">
@@ -351,9 +407,12 @@
         <img src="images/02-street-sails.jpg" width="1125" height="1500" loading="lazy" alt="Улица с тентами">
         <img src="images/02-street-sails-b.jpg" width="1125" height="1500" loading="lazy" alt="Улица с тентами">
         <img src="images/02-street-sign.jpg" width="1125" height="1500" loading="lazy" alt="Уличный указатель">
+        <img src="images/01-street-hill.jpg" width="1125" height="1500" loading="lazy" alt="Улица, поднимающаяся к холмам Пенедес">
       </div>
       <p>Завяжи разговор — с барменом, с пекарем, с посетителями. Здесь люди меняются в лице, когда их просят рассказать о местной жизни. С этого лёгкого человеческого касания день и начинается.</p>
     </div>
+
+    <p class="pullq">«Один глубокий контакт стоит пяти беглых.»</p>
 
     <!-- ③ -->
     <div class="stop">
@@ -361,6 +420,7 @@
         <span class="stop__num">③</span>
         <h2 class="stop__title">Сердце дня<small>Один глубокий спуск</small></h2>
       </div>
+      <div class="meta"><span>📍 <b>Где:</b> Cava Centre или семейный погреб</span><span>💡 <b>Суть:</b> один глубокий визит — пик дня</span></div>
       <figure class="port">
         <img src="images/03-cava-centre.jpg" width="1125" height="1500" loading="lazy"
              alt="Cava Centre — старая винокурня CIC Fassina">
@@ -386,6 +446,7 @@
         <span class="stop__num">④</span>
         <h2 class="stop__title">Вермут<small>Остановка времени</small></h2>
       </div>
+      <div class="meta"><span>📍 <b>Где:</b> терраса на площади</span><span>💡 <b>Суть:</b> остановить время перед обедом</span></div>
       <figure class="port">
         <img src="images/04-vermut-cava-chocolate.jpg" width="1125" height="1500" loading="lazy"
              alt="Вермут с оливками на террасе">
@@ -404,6 +465,7 @@
         <span class="stop__num">⑤</span>
         <h2 class="stop__title">Обед<small>Гастрономическая ось</small></h2>
       </div>
+      <div class="meta"><span>📍 <b>Где:</b> центр — Cal Blay или Canals &amp; Munné</span><span>💡 <b>Суть:</b> долгий обед среди местных</span></div>
       <figure>
         <img src="images/05-cellar-building.jpg" width="1500" height="1125" loading="lazy"
              alt="Старинная модернистская винодельня под обеденные залы">
@@ -420,12 +482,15 @@
       <p class="note"><b>Важно:</b> Если ты выбрал формат, где глубокий визит с дегустацией совмещён с обедом прямо на винодельне — твой стол там, и городской ресторан не нужен. Но обедая в самом городе, среди местных жителей, ты окончательно перестаёшь быть просто посетителем.</p>
     </div>
 
+    <p class="pullq">«Не пытайся объять всё. Город не берётся количеством.»</p>
+
     <!-- ⑥ -->
     <div class="stop">
       <div class="stop__head">
         <span class="stop__num">⑥</span>
         <h2 class="stop__title">Десерт дня<small>Вторая страсть · сладко и медленно</small></h2>
       </div>
+      <div class="meta"><span>📍 <b>Где:</b> Simón Coll · Espai Xocolata</span><span>💡 <b>Суть:</b> шоколад — вторая страсть города</span></div>
       <figure>
         <img src="images/06-simon-coll.jpg" width="1500" height="1125" loading="lazy"
              alt="Simón Coll — шоколадный дом с 1840 года">
@@ -449,6 +514,7 @@
         <span class="stop__num">⑦</span>
         <h2 class="stop__title">Финал<small>Винотека и люди</small></h2>
       </div>
+      <div class="meta"><span>📍 <b>Где:</b> винотека Cal Feru, C/ Diputació 51</span><span>💡 <b>Суть:</b> разговор с виноделом на закрытие дня</span></div>
       <figure class="port">
         <img src="images/07-cal-feru.jpg" width="1500" height="1125" loading="lazy"
              alt="Винотека Cal Feru">
@@ -465,6 +531,7 @@
         <span class="stop__num">⑧</span>
         <h2 class="stop__title">Дорога<small>Состояние</small></h2>
       </div>
+      <div class="meta"><span>📍 <b>Где:</b> поезд R4 обратно</span><span>💡 <b>Суть:</b> уехать чуть раньше, в хорошем состоянии</span></div>
       <figure>
         <img src="images/08-vines-sunset.jpg" width="1408" height="768" loading="lazy"
              alt="Виноградники Пенедес на закате">
@@ -494,7 +561,7 @@
 </section>
 
 <!-- ======================= ЗОНА «ПРАКТИКА» ======================= -->
-<section class="practice">
+<section class="practice" id="praktika">
   <div class="wrap">
 
     <div class="practice__intro">
@@ -630,7 +697,36 @@
   <p class="discl">Часы работы, цены и расписания могут меняться — сверяйтесь перед поездкой. Это редакционный совет, а не официальный источник.</p>
   <p class="rights">© 2026 · Anton Pavlyuk · Rosalia · Andrew Ashurst</p>
   <p>Связаться: <a href="mailto:Penedesvino1@gmail.com">Penedesvino1@gmail.com</a></p>
+  <p class="credits">Фото зданий Freixenet: <a href="https://commons.wikimedia.org/wiki/Category:Caves_Freixenet" target="_blank" rel="noopener">Enric, CC BY-SA 4.0</a> и <a href="https://commons.wikimedia.org/wiki/File:Montserrat_-_50.jpg" target="_blank" rel="noopener">Maria Rosa Ferré, CC BY-SA 2.0</a>, via Wikimedia Commons; изображения отредактированы.</p>
 </footer>
+
+</div><!-- /shell -->
+
+<!-- Лайтбокс: увеличение фото по тапу/клику, без библиотек -->
+<div id="lb" class="lb" hidden><img class="lb__img" alt=""></div>
+<script>
+(function(){
+  var lb=document.getElementById('lb'), img=lb.querySelector('.lb__img');
+  var mobile=window.matchMedia('(max-width:768px),(pointer:coarse)').matches;
+  function open(src,alt,modest){
+    img.src=src; img.alt=alt||'';
+    lb.classList.toggle('is-modest',modest);
+    lb.classList.toggle('is-full',!modest);
+    lb.hidden=false; document.body.style.overflow='hidden';
+  }
+  function close(){lb.hidden=true;img.src='';document.body.style.overflow='';}
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('figure img, .strip img');
+    if(!t) return;
+    var inStrip=!!e.target.closest('.strip');
+    if(mobile){ open(t.currentSrc||t.src, t.alt, false); }      // смартфон: крупно
+    else if(inStrip){ open(t.currentSrc||t.src, t.alt, true); } // ПК: только серия, умеренно
+    // ПК + одиночное фото → ничего не делаем, десктоп не ломаем
+  });
+  lb.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden)close();});
+})();
+</script>
 
 </body>
 </html>
