@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#6f1d2b">
+<title>Sant Sadurní d'Anoia — editorial guide</title>
+<meta name="description" content="One day in Sant Sadurní d'Anoia, the capital of cava, lived like a local. An editorial gift guide: advice, not an itinerary.">
+
+<!-- Гид-подарок не индексируется поисковиками: открывается только по прямой ссылке,
+     которую вы отправляете респондентам опроса. Чтобы сделать его публичным в поиске —
+     удалите строку robots ниже. -->
+<meta name="robots" content="noindex, nofollow">
+
+<!-- PWA (на будущее): когда захотим приложение-оффлайн, сюда добавятся
+     <link rel="manifest" href="manifest.webmanifest"> и регистрация service worker.
+     Структура страницы уже под это подготовлена, переписывать ничего не придётся. -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#f7f1e6;        /* бумага — фон зоны «голос» */
+    --paper-card:#fcf8f1;   /* светлые карточки */
+    --paper-cool:#ece2d2;   /* фон зоны «практика» — чуть холоднее, чтобы отделить */
+    --ink:#2a211c;          /* основной текст */
+    --ink-soft:#5f5246;     /* второстепенный текст */
+    --bordo:#6f1d2b;        /* бордо — акцент, кнопки */
+    --bordo-deep:#551320;
+    --terra:#c15a2e;        /* терракота — цифры, детали */
+    --line:rgba(42,33,28,.14);
+    --shadow:0 1px 2px rgba(42,33,28,.06),0 6px 20px rgba(42,33,28,.07);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:#e3d7c4;
+    color:var(--ink);
+    font-family:"Lora",Georgia,serif;
+    font-size:18px;
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  img{display:block;max-width:100%;height:auto}
+
+  /* ---------- общий контейнер, одна колонка, мобильный приоритет ---------- */
+  .wrap{max-width:680px;margin:0 auto;padding:0 20px}
+
+  /* ============================================================
+     ЗОНА 1 — «ГОЛОС». Только чтение. Никаких кнопок и ссылок.
+     ============================================================ */
+  .voice{padding:0 0 64px}
+
+  /* Обложка */
+  .hero{position:relative;margin:0 0 8px}
+  .hero__img{width:100%;height:auto;max-height:78vh;object-fit:cover;object-position:center}
+  .hero__band{
+    background:var(--bordo);
+    color:#f7eddf;
+    padding:30px 20px 34px;
+    text-align:center;
+  }
+  .hero__kicker{
+    font-family:"Inter",sans-serif;
+    font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:#e9c9b4;margin:0 0 14px;font-weight:600;
+  }
+  .hero__title{
+    font-family:"Playfair Display",serif;
+    font-weight:800;font-size:clamp(34px,10vw,52px);line-height:1.02;
+    margin:0;letter-spacing:.01em;
+  }
+  .hero__sub{
+    font-family:"Inter",sans-serif;
+    font-size:14px;letter-spacing:.14em;text-transform:uppercase;
+    margin:14px 0 0;color:#eccbb7;
+  }
+
+  /* Вводный «голос» */
+  .lede{font-size:20px;line-height:1.7;color:var(--ink)}
+  .lede p{margin:0 0 20px}
+  .lede p:first-of-type{margin-top:34px}
+  .gift{
+    font-family:"Inter",sans-serif;font-size:15px;line-height:1.6;
+    color:var(--ink-soft);border-left:3px solid var(--terra);
+    padding:4px 0 4px 16px;margin:28px 0;
+  }
+
+  /* Разделитель-рубрика («— ПРЕЖДЕ ЧЕМ ЕХАТЬ —» и т.п.) */
+  .rubric{
+    font-family:"Inter",sans-serif;font-weight:600;
+    font-size:13px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--bordo);text-align:center;
+    margin:52px 0 26px;position:relative;
+  }
+  .rubric::before,.rubric::after{
+    content:"";display:inline-block;width:28px;height:1px;
+    background:var(--bordo);vertical-align:middle;margin:0 12px;opacity:.5;
+  }
+
+  .voice p{margin:0 0 20px}
+
+  /* Точки маршрута ①–⑧ */
+  .stop{margin:46px 0 0}
+  .stop__head{display:flex;align-items:baseline;gap:12px;margin:0 0 6px}
+  .stop__num{
+    font-family:"Playfair Display",serif;font-weight:800;
+    font-size:30px;color:var(--terra);line-height:1;flex:none;
+  }
+  .stop__title{
+    font-family:"Playfair Display",serif;font-weight:700;
+    font-size:24px;line-height:1.15;margin:0;color:var(--ink);
+  }
+  .stop__title small{
+    display:block;font-family:"Inter",sans-serif;font-weight:600;
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-soft);margin-top:6px;
+  }
+
+  figure{margin:24px 0;}
+  figure img{
+    width:100%;border-radius:10px;box-shadow:var(--shadow);
+    background:var(--paper-card);
+  }
+  figure.port img{max-height:70vh;object-fit:cover}
+
+  /* горизонтальная лента деталей (мобайл-friendly, одна колонка сохраняется) */
+  .strip{
+    display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+    margin:22px -20px;padding:4px 20px 14px;-webkit-overflow-scrolling:touch;
+  }
+  .strip img{
+    height:210px;width:auto;flex:none;border-radius:10px;
+    scroll-snap-align:start;box-shadow:var(--shadow);
+  }
+  .strip::-webkit-scrollbar{height:6px}
+  .strip::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+
+  .variant{
+    background:var(--paper-card);border:1px solid var(--line);
+    border-radius:12px;padding:18px 20px;margin:18px 0;
+  }
+  .variant b{color:var(--bordo)}
+
+  .note{
+    font-family:"Inter",sans-serif;font-size:15px;line-height:1.6;
+    color:var(--ink-soft);background:rgba(193,90,46,.08);
+    border-radius:10px;padding:14px 16px;margin:20px 0;
+  }
+  .note b{color:var(--terra)}
+
+  blockquote.voiceq{
+    margin:30px 0;padding:22px 24px;background:var(--bordo);
+    color:#f6ecdd;border-radius:12px;font-style:italic;font-size:18px;line-height:1.6;
+  }
+  blockquote.voiceq .who{
+    display:block;font-style:normal;font-family:"Inter",sans-serif;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:#e3bfa9;margin:0 0 10px;font-weight:600;
+  }
+
+  /* ============================================================
+     ЗОНА 2 — «ПРАКТИКА». Справка + КНОПКИ-ДЕЙСТВИЯ единого вида.
+     ============================================================ */
+  .practice{background:var(--paper-cool);padding:10px 0 70px;border-top:1px solid var(--line)}
+  .practice .wrap{font-family:"Inter",sans-serif;font-size:16px;line-height:1.62}
+
+  .practice__intro{
+    text-align:center;padding:44px 0 8px;
+  }
+  .practice__intro .tag{
+    font-family:"Inter",sans-serif;font-weight:700;font-size:13px;
+    letter-spacing:.24em;text-transform:uppercase;color:var(--bordo);
+  }
+  .practice__intro h2{
+    font-family:"Playfair Display",serif;font-weight:800;
+    font-size:30px;margin:10px 0 0;color:var(--ink);
+  }
+
+  .facts{list-style:none;margin:26px 0 0;padding:0}
+  .facts>li{
+    background:var(--paper-card);border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;margin:0 0 12px;box-shadow:var(--shadow);
+  }
+  .facts>li b{color:var(--bordo)}
+  .facts ul{margin:8px 0 0;padding-left:18px}
+  .facts ul li{margin:4px 0}
+
+  /* --- блок действий / кнопки --- */
+  .actions{margin:40px 0 0}
+  .actions h3{
+    font-family:"Playfair Display",serif;font-weight:700;font-size:24px;
+    margin:0 0 6px;color:var(--ink);
+  }
+  .actions__hint{color:var(--ink-soft);font-size:14px;margin:0 0 20px}
+
+  .act-card{
+    background:var(--paper-card);border:1px solid var(--line);border-radius:14px;
+    padding:18px;margin:0 0 14px;box-shadow:var(--shadow);
+  }
+  .act-card__name{
+    font-family:"Inter",sans-serif;font-weight:700;font-size:17px;color:var(--ink);margin:0;
+  }
+  .act-card__meta{font-size:14px;color:var(--ink-soft);margin:4px 0 0}
+
+  .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+
+  /* ЕДИНАЯ КНОПКА. Сегодня: сайт / телефон / карта.
+     Завтра: та же кнопка станет бронью — достаточно поменять
+     data-action на "book" и href на ссылку бронирования.
+     Внешний вид и разметка остаются теми же. */
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:"Inter",sans-serif;font-weight:600;font-size:15px;
+    text-decoration:none;border-radius:999px;
+    padding:12px 20px;min-height:46px;line-height:1;cursor:pointer;
+    transition:transform .05s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  /* первичная — бордо-заливка */
+  .btn--primary{background:var(--bordo);color:#f7eddf;box-shadow:0 2px 8px rgba(111,29,43,.3)}
+  .btn--primary:hover{background:var(--bordo-deep)}
+  /* вторичная — контур */
+  .btn--ghost{background:transparent;color:var(--bordo);border:1.5px solid var(--bordo)}
+  .btn--ghost:hover{background:rgba(111,29,43,.07)}
+  .btn .ico{font-size:16px;line-height:1}
+
+  .colophon{
+    text-align:center;margin:48px 0 0;padding-top:28px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-soft);
+  }
+
+  /* ---------- языковой переключатель (липкая полоса сверху) ---------- */
+  .langbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(85,19,32,.97);backdrop-filter:blur(6px);
+    display:flex;justify-content:center;align-items:center;gap:6px;
+    padding:8px 10px;
+  }
+  .langbar a,.langbar span{
+    font-family:"Inter",sans-serif;font-weight:600;font-size:13px;letter-spacing:.08em;
+    padding:7px 15px;border-radius:999px;line-height:1;text-decoration:none;
+    display:inline-flex;align-items:center;min-height:34px;transition:background .15s;
+  }
+  .langbar a{color:#f2dcc9}
+  .langbar a:hover{background:rgba(247,237,223,.14)}
+  .langbar .lang-active{background:#f7eddf;color:#6f1d2b}
+  .langbar .lang-soon{color:#caa48f;opacity:.5;cursor:default}
+
+  /* ---------- подвал сайта: права, контакт, дисклеймер ---------- */
+  .sitefoot{
+    background:#2a211c;color:#d8cabb;
+    font-family:"Inter",sans-serif;font-size:13px;line-height:1.65;text-align:center;
+    padding:34px 20px 42px;
+  }
+  .sitefoot .discl{color:#b6a493;max-width:560px;margin:0 auto 16px}
+  .sitefoot .rights{color:#d8cabb;margin:0 0 4px}
+  .sitefoot a{color:#e9c9b4;text-decoration:none;border-bottom:1px solid rgba(233,201,180,.4)}
+  .sitefoot a:hover{color:#fff}
+
+  /* ---------- оболочка: комфортная ширина на десктопе (на телефоне без изменений) ---------- */
+  .shell{max-width:760px;margin:0 auto;background:var(--paper);box-shadow:0 0 50px rgba(42,33,28,.14)}
+
+  /* мягкий ориентир у входа — тихая подсказка, не кнопка */
+  .orient{
+    font-family:"Inter",sans-serif;font-size:15px;line-height:1.55;color:var(--ink-soft);
+    background:rgba(193,90,46,.08);border-radius:10px;padding:14px 16px;margin:28px 0;
+  }
+  .orient a{color:var(--bordo);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(111,29,43,.4)}
+  .orient a:hover{color:var(--bordo-deep)}
+
+  /* инфо-строка в начале шага: где + суть */
+  .meta{
+    font-family:"Inter",sans-serif;font-size:13.5px;line-height:1.5;color:var(--ink-soft);
+    display:flex;flex-wrap:wrap;gap:5px 18px;
+    border-left:3px solid var(--terra);padding:9px 0 9px 14px;margin:2px 0 18px;
+  }
+  .meta b{color:var(--ink);font-weight:600}
+
+  /* акцентная цитата-врезка */
+  .pullq{
+    font-family:"Playfair Display",serif;font-style:italic;font-weight:600;
+    font-size:clamp(23px,6.2vw,31px);line-height:1.26;color:var(--bordo);
+    text-align:center;margin:50px auto;max-width:92%;
+  }
+
+  /* подпись-кредиты на фото (лицензия CC) */
+  .credits{font-size:11.5px;line-height:1.5;color:#a1917f;max-width:560px;margin:18px auto 0}
+  .credits a{color:#c9ab97;border-bottom:none;text-decoration:underline}
+  .credits a:hover{color:#e9c9b4}
+
+  /* ---------- лайтбокс: увеличение фото по тапу/клику ---------- */
+  .lb{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;
+      align-items:center;justify-content:center;z-index:999;cursor:zoom-out;padding:24px}
+  .lb[hidden]{display:none}   /* важно: иначе скрытый слой перекрывает страницу */
+  .lb__img{border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+  .lb.is-full .lb__img{max-width:95vw;max-height:95vh}        /* смартфон: крупно */
+  .lb.is-modest{background:rgba(0,0,0,.6)}
+  .lb.is-modest .lb__img{max-width:860px;max-height:80vh}      /* ПК, серия: умеренно */
+  @media (pointer:coarse),(max-width:768px){ figure img,.strip img{cursor:zoom-in} }
+  @media (pointer:fine) and (min-width:769px){ .strip img{cursor:zoom-in} }
+</style>
+</head>
+
+<body>
+
+<div class="shell">
+
+<!-- Языковой переключатель: ES (index.html) · CA · EN · RU -->
+<nav class="langbar" aria-label="Language">
+  <a href="index.html">ES</a>
+  <a href="index-ca.html">CA</a>
+  <span class="lang-active">EN</span>
+  <a href="index-ru.html">RU</a>
+</nav>
+
+<!-- ======================= ЗОНА «ГОЛОС» ======================= -->
+<section class="voice">
+
+  <header class="hero">
+    <img class="hero__img" src="images/00-cover-skyline.jpg" width="848" height="1264"
+         alt="Panorama of Sant Sadurní d'Anoia">
+    <div class="hero__band">
+      <p class="hero__kicker">Penedès · the capital of cava</p>
+      <h1 class="hero__title">Sant Sadurní<br>d'Anoia</h1>
+      <p class="hero__sub">Editorial guide · one day</p>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <div class="lede">
+      <p>One day to live this town like a local. And if you want more, it will open up that second layer you don't get to see in a single day.</p>
+    </div>
+
+    <p class="gift">A gift for taking our survey. Thank you! Here you go — straight, the way you'd tell a friend.</p>
+
+    <p>And first things first, the whole point: this isn't a dry itinerary. It's advice. Below you'll find links, phone numbers, hours — build your own day, at your own pace. A guide doesn't lead you by the hand. It teaches you how to look.</p>
+
+    <p class="orient">Just want the practical stuff — hours, addresses, maps? It's all below: <a href="#praktika">↓ go to the practical info</a>. And if you want to really live this day, just read on.</p>
+
+    <p class="rubric">Before you go</p>
+
+    <p>Before a trip, what do we usually do? Of course — we ask the search engine or, as everyone does these days, ChatGPT: "What to see in Sant Sadurní?" And the answer will be right, and useful, but it'll read like Wikipedia. Wineries, tours, the cava capital of the world. True enough — wine is the main axis here. But stop there and all you'll see is the shop window.</p>
+
+    <p>And they'll almost certainly tell you to come "as a day trip from Barcelona," as if the Penedès region, Sant Sadurní d'Anoia, were a suburb of the capital, a quick stop along the way. That's the big mistake nearly every guidebook repeats.</p>
+
+    <p>The Penedès is not a satellite of Barcelona. It's a name that stands on its own, like Tuscany or Champagne: a land with its own proud character, its own rhythm and traditions. We're not inviting you to the outskirts of a big city, but into a world apart, whole.</p>
+
+    <p>And what makes it alive is the people and their passionate obsession with their craft. From the owner of a world-class wine house to the village baker or the schoolteacher — here there's no such thing as "just a job." Cava, bread, chocolate — these aren't an industry here, but a craft taken to the absolute. And that passion shows in everything: in the quiet aging of bottles deep underground, and in the way the town erupts in fire and the thunder of drums at its festivals.</p>
+
+    <p>And carry one piece of advice in your head all day — it matters more than any single stop: don't try to take it all in. This town isn't won by quantity. One deep encounter is worth five in passing. The empty time between things isn't a flaw in the plan. It is, precisely, the Penedès.</p>
+
+    <!-- ① -->
+    <div class="stop">
+      <div class="stop__head">
+        <span class="stop__num">①</span>
+        <h2 class="stop__title">Scale<small>First impression</small></h2>
+      </div>
+      <div class="meta"><span>📍 <b>Where:</b> opposite the train station</span><span>💡 <b>Essence:</b> feel the scale</span></div>
+      <figure>
+        <img src="images/freixenet-panorama.jpg" width="1500" height="985" loading="lazy"
+             alt="Панорама Caves Freixenet и Sant Sadurní d'Anoia с горой Монтсеррат на фоне">
+      </figure>
+      <figure>
+        <img src="images/freixenet-facade.jpg" width="1500" height="1125" loading="lazy"
+             alt="Главный фасад Caves Freixenet с модернистской аркой и надписью CAVAS FREIXENET">
+      </figure>
+      <p>You step out of the station and run straight into the giant Freixenet, the largest producer of sparkling wine.</p>
+      <p>Don't take the tour just to tick a box. Look at that façade another way: as a monument to pure human daring. The end of the 19th century, a small village decides to take on Champagne itself: they learned from her, they made their name, and they held their ground. The scale of the giants is no enemy to the family cellars: it was that very scale that gave the region its strength and carried cava onto the world stage. Hold on to that sense of scale — later you'll descend into its quiet opposite, and one simply doesn't live without the other.</p>
+      <figure>
+        <img src="images/freixenet-bridge.jpg" width="1500" height="1125" loading="lazy"
+             alt="Caves Freixenet, вид от моста через риеру Лаверно">
+      </figure>
+      <p>Cross the bridge and stop. A thick, warm smell of pine and sun-baked scrub will hit you full in the face. Look around: you're in the very heart of the Penedès valley. To the south, the coastal Garraf massif shields it from the Mediterranean; to the north, the hills rise toward the harsh ridge of Montserrat, and the vines climb the slopes — from nearly sea level up to hundreds of meters. This is no resort, no district of Barcelona. This is the land itself, the terroir where what later ends up in your glass is grown. Stand, breathe. You're here.</p>
+    </div>
+
+    <!-- ② -->
+    <div class="stop">
+      <div class="stop__head">
+        <span class="stop__num">②</span>
+        <h2 class="stop__title">Morning like a local<small>A quiet way in</small></h2>
+      </div>
+      <div class="meta"><span>📍 <b>Where:</b> the center, by the town hall (Ajuntament)</span><span>💡 <b>Essence:</b> ease into the town</span></div>
+      <figure class="port">
+        <img src="images/02-bollard-street.jpg" width="1125" height="1500" loading="lazy"
+             alt="Тротуарные отбойники в форме винных пробок">
+      </figure>
+      <p>Head into the center, toward the town hall (Ajuntament). Come early: the town is waking, the shops are opening or still getting ready, the streets are empty — and that's the most honest hour of all.</p>
+      <p>Step into a local bakery-café, order a coffee and a warm croissant, exactly the way the people of Sant Sadurní do every morning. Sit out on the terrace, feel the mood of the place. As you walk through town, don't just look at the shop windows — look at the little things. Even the bollards on the sidewalks here are shaped like wine corks and bottles: the town is literally stitched through with details.</p>
+      <div class="strip">
+        <img src="images/02-cafe-terrace.jpg" width="1125" height="1500" loading="lazy" alt="Терраса кафе">
+        <img src="images/02-street-empty.jpg" width="1125" height="1500" loading="lazy" alt="Пустая утренняя улица">
+        <img src="images/02-street-narrow.jpg" width="1125" height="1500" loading="lazy" alt="Узкая улица">
+        <img src="images/02-facade-door.jpg" width="1125" height="1500" loading="lazy" alt="Модернистский фасад с дверью">
+        <img src="images/02-facade-octagon.jpg" width="1125" height="1500" loading="lazy" alt="Фасад с восьмиугольным окном">
+        <img src="images/02-plaza-mural.jpg" width="1500" height="1125" loading="lazy" alt="Мурал на площади">
+        <img src="images/02-street-sails.jpg" width="1125" height="1500" loading="lazy" alt="Улица с тентами">
+        <img src="images/02-street-sails-b.jpg" width="1125" height="1500" loading="lazy" alt="Улица с тентами">
+        <img src="images/02-street-sign.jpg" width="1125" height="1500" loading="lazy" alt="Уличный указатель">
+        <img src="images/01-street-hill.jpg" width="1125" height="1500" loading="lazy" alt="Улица, поднимающаяся к холмам Пенедес">
+      </div>
+      <p>Strike up a conversation — with the bartender, the baker, the regulars. Here people's faces change when you ask them to tell you about local life. With that light human touch, the day begins.</p>
+    </div>
+
+    <p class="pullq">"One deep encounter is worth five in passing."</p>
+
+    <!-- ③ -->
+    <div class="stop">
+      <div class="stop__head">
+        <span class="stop__num">③</span>
+        <h2 class="stop__title">The heart of the day<small>One deep descent</small></h2>
+      </div>
+      <div class="meta"><span>📍 <b>Where:</b> Cava Centre or a family cellar</span><span>💡 <b>Essence:</b> one deep visit — the day's peak</span></div>
+      <figure class="port">
+        <img src="images/03-cava-centre.jpg" width="1125" height="1500" loading="lazy"
+             alt="Cava Centre — старая винокурня CIC Fassina">
+      </figure>
+      <p>Here is your great emotional peak. And it must be one, and only one. With a clear head, before your palate and your attention tire out. Choose whichever calls to you more — but don't take both visits in the same day. That's exactly where the trap of overload lies: after the second immersion, you'll feel nothing at all.</p>
+      <div class="variant">
+        <p style="margin:0"><b>Option A: A small, intimate family cellar.</b> The deepest, most intimate level of immersion. Here the tour is often led by the winemaker himself or his children. Watch his hands — how carefully he touches the bottles in the cellar. As you go down into the cool silence underground, you'll understand the secret of this place: the real Sant Sadurní isn't up on the street. It's beneath your feet, in endless tunnels where passion matures for years.</p>
+      </div>
+      <div class="variant">
+        <p style="margin:0"><b>Option B: Cava Centre (the old CIC Fassina distillery).</b> Forget the dull word "museum" — no dusty glass cases here; it's an interactive interpretation that brings all five senses into play. And a real key to understanding what the people here are made of. What strikes you most is the story of the fil·loxera — a tiny beetle that in the 19th century wiped out every single vineyard, down to the last. For anywhere else it would have been the end. For Sant Sadurní it became a moment of fierce rebirth: they tore everything out by the roots and replanted the valley. And one simple experiment turns your whole view upside down: the pressure inside a bottle of cava is nearly three times that of your car tire — after that, you hold the glass in your hand a little differently. You walk out of here and you understand: every bubble in your glass is the fruit of pure human will.</p>
+      </div>
+      <div class="strip">
+        <img src="images/03-museum-phylloxera.jpg" width="1125" height="1500" loading="lazy" alt="Экспозиция о филлоксере">
+        <img src="images/03-museum-pressure-a.jpg" width="1500" height="1125" loading="lazy" alt="Опыт с давлением в бутылке кавы">
+        <img src="images/03-museum-pressure-b.jpg" width="1125" height="1500" loading="lazy" alt="Опыт с давлением в бутылке кавы">
+        <img src="images/illus-cellar-small.jpg" width="286" height="512" loading="lazy" alt="Иллюстрация погреба">
+      </div>
+    </div>
+
+    <!-- ④ -->
+    <div class="stop">
+      <div class="stop__head">
+        <span class="stop__num">④</span>
+        <h2 class="stop__title">Vermut<small>Time, stopped</small></h2>
+      </div>
+      <div class="meta"><span>📍 <b>Where:</b> a terrace on the square</span><span>💡 <b>Essence:</b> stop time before lunch</span></div>
+      <figure class="port">
+        <img src="images/04-vermut-cava-chocolate.jpg" width="1125" height="1500" loading="lazy"
+             alt="Вермут с оливками на террасе">
+      </figure>
+      <p>You come out of your main visit, full of it all. Now — a vermouth with olives on a terrace on the square.</p>
+      <p>"Fer el vermut" — making the vermouth — isn't about alcohol: it's about that pure Catalan art of stopping time before a meal. Don't analyze, just sit and watch the town. It's the perfect bridge to lunch.</p>
+      <figure class="port">
+        <img src="images/04-tasting-glasses.jpg" width="1125" height="1500" loading="lazy"
+             alt="Бокалы на дегустации">
+      </figure>
+    </div>
+
+    <!-- ⑤ -->
+    <div class="stop">
+      <div class="stop__head">
+        <span class="stop__num">⑤</span>
+        <h2 class="stop__title">Lunch<small>The gastronomic axis</small></h2>
+      </div>
+      <div class="meta"><span>📍 <b>Where:</b> center — Cal Blay or Canals &amp; Munné</span><span>💡 <b>Essence:</b> a long lunch among locals</span></div>
+      <figure>
+        <img src="images/05-cellar-building.jpg" width="1500" height="1125" loading="lazy"
+             alt="Старинная модернистская винодельня под обеденные залы">
+      </figure>
+      <p>Around two in the afternoon, exactly when the locals sit down to eat. A long, unhurried lunch isn't a technical refueling: it's the social heart of the Catalan day.</p>
+      <p>If you want to live the town from the inside, eat in the center, among the people of the place. Two honest options:</p>
+      <div class="variant">
+        <p style="margin:0"><b>Cal Blay Orígens.</b> Not underground vaults, but a beautiful old modernist winery, lovingly turned into dining rooms; each one is named after a wine motif, and one is called precisely Fil·loxera, after that very story you heard in the morning. Charcoal-grilled cooking, seasonal produce from neighboring farms. A notch higher, reservation required (and bear in mind: closed Tuesdays and Wednesdays).</p>
+      </div>
+      <div class="variant">
+        <p style="margin:0"><b>Canals &amp; Munné.</b> A family wine house since 1915, now in its fifth generation, with the restaurant set right inside their own old cellars. The focus here is special: the wine and the cava are poured for you by their own people, from the house itself — lunch and tasting melt into one. Simpler, livelier, sometimes louder, open every day. If Cal Blay is quiet polish, here you've got the soul of the Catalan table.</p>
+      </div>
+      <p>In both, the local cooking opens up fully, and the wine is served not for professional analysis, but for the pure pleasure of going with the food.</p>
+      <p class="note"><b>Important:</b> if you've chosen the format where the deep visit with tasting is combined with lunch at the winery itself, your table is there, and you don't need a restaurant in town. But eating in the town itself, among its people, is where you finally stop being just a visitor.</p>
+    </div>
+
+    <p class="pullq">"Don't try to take it all in. This town isn't won by quantity."</p>
+
+    <!-- ⑥ -->
+    <div class="stop">
+      <div class="stop__head">
+        <span class="stop__num">⑥</span>
+        <h2 class="stop__title">The day's dessert<small>The second passion · sweet and slow</small></h2>
+      </div>
+      <div class="meta"><span>📍 <b>Where:</b> Simón Coll · Espai Xocolata</span><span>💡 <b>Essence:</b> chocolate, the town's second passion</span></div>
+      <figure>
+        <img src="images/06-simon-coll.jpg" width="1500" height="1125" loading="lazy"
+             alt="Simón Coll — шоколадный дом с 1840 года">
+      </figure>
+      <p>After lunch, head over to Simón Coll (to their Espai Xocolata), running since 1840. A thick smell of roasted cacao will come out to meet you before you even arrive.</p>
+      <p>Today — just step into their open space: soak up the aromas, look, buy. Save the full tour with chocolate tasting for a second day, if you stay. Don't take it on the same day as the wine immersion: it would be a second peak, and you and I agreed on something — one peak.</p>
+      <figure>
+        <img src="images/06-cava-shop-window.jpg" width="1500" height="1125" loading="lazy"
+             alt="Витрина с кавой и шоколадом">
+      </figure>
+      <p>Why chocolate, all of a sudden, in the wine capital? Because both cava and real chocolate are made for the same thing: for celebration, for the ritual of pure pleasure. It's the town's second cultural pillar, where the family tradition is kept with the same fanatical obsession as the aging of the wines.</p>
+      <p>And here's a detail that suddenly sews the town together with Barcelona into a single story. Under Simón Coll's wing lives the brand Chocolate Amatller — that very Amatller family. Their modernist palace, the Casa Amatller, stands on the Passeig de Gràcia in Barcelona, wall to wall with Gaudí's own Casa Batlló — that famous façade where the whole world takes its photos. And that palace was built by the architect Puig i Cadafalch — the very man whose hands also raised the wine cathedral of Codorníu here in Sant Sadurní. One single person tied the chocolate house in the capital to the cava in the Penedès. So the stone in Barcelona and the cacao here are one and the same passion, just told twice.</p>
+      <p>And details like that — there isn't just one. There are a great, great many: behind every façade, every name and every bottle hides its own story, and no single guide can hold them all. That's why Sant Sadurní is worth coming back to — not once, and not for a single day. However you arrive — tourist, expat, or native-born — the town will always leave you one more layer unread.</p>
+      <p>And one more thing: if for whatever reason you don't drink wine, Sant Sadurní is still worth your trip. Come for Simón Coll: chocolate here is a journey just as complete as cava.</p>
+      <p>No more complicated tastings — your senses need to rest. Just soak up the aromas and walk.</p>
+    </div>
+
+    <!-- ⑦ -->
+    <div class="stop">
+      <div class="stop__head">
+        <span class="stop__num">⑦</span>
+        <h2 class="stop__title">The ending<small>The wine shop and the people</small></h2>
+      </div>
+      <div class="meta"><span>📍 <b>Where:</b> Cal Feru wine shop, C/ Diputació 51</span><span>💡 <b>Essence:</b> a chat with the winemaker to close the day</span></div>
+      <figure class="port">
+        <img src="images/07-cal-feru.jpg" width="1500" height="1125" loading="lazy"
+             alt="Винотека Cal Feru">
+      </figure>
+      <p>End the day at the Cal Feru wine shop (C/ Diputació, 51), which the Roig family has run since 1934 — now the fourth generation. It opens after the siesta, toward evening, exactly in time to round off your day's route.</p>
+      <p>Don't go in as a buyer heading for a shelf of wine — strike up a conversation, ask about the local wine and about how the town lives. If you're lucky, behind the counter will be Xavi Roig himself — sommelier and that fourth Roig in the line; but even if today's shift falls to someone from the team, here everyone is devoted to the same thing. You'll watch a person's gaze change. Here they don't just sell — they share what they're truly proud of. And believe me, you'll hear more than from the most seasoned guide you can imagine.</p>
+      <p>Take a couple of bottles with you, or arrange delivery.</p>
+      <p>Look how beautifully the circle has closed: in the morning the baker welcomed you, in the evening the winemaker sees you off. At the start, a light touch; at the end, a deep conversation. And in between — the wine and the story of the land.</p>
+    </div>
+
+    <!-- ⑧ -->
+    <div class="stop">
+      <div class="stop__head">
+        <span class="stop__num">⑧</span>
+        <h2 class="stop__title">The road<small>A state of being</small></h2>
+      </div>
+      <div class="meta"><span>📍 <b>Where:</b> R4 train back</span><span>💡 <b>Essence:</b> leave a little early, in good shape</span></div>
+      <figure>
+        <img src="images/08-vines-sunset.jpg" width="1408" height="768" loading="lazy"
+             alt="Виноградники Пенедес на закате">
+      </figure>
+      <p>Go back on the same R4 train you came in on — and it needn't be the very last one. Leave a little early, while a faint "I'd stay longer" is still alive in you and not physical exhaustion.</p>
+      <p>Through the window the same hills will drift past, but you'll come back a little different. The end of this day isn't just a point on the map, it's a state: a quiet evening, a bottle with a story in your bag, and a calm road home. That's exactly how the locals go back.</p>
+    </div>
+
+    <p class="rubric">If one day you can · stay</p>
+
+    <p>This day gave you the town. But there's one more layer, waiting for you a little later: around seven in the evening the day's visitors rush for the R4 back to Barcelona — and that's exactly when the real thing begins. When the last day train pulls away, Sant Sadurní takes off its tourist mask: the wine houses close, the wine shops close — and the town is left for its own alone. A hotel right on the vineyard, or in town.</p>
+
+    <p>Dinner in a small family restaurant with no eye on the timetable. And in the morning — to wake in the capital of cava while the mist still hangs over the Penedès hills, have a coffee with a warm croissant in a local bakery, and set off on foot up into the hills along the wine routes.</p>
+
+    <p>This isn't a required program — it's a secret we whisper in your ear. The train will be there tomorrow too. If one day you can — stay the night. This is exactly where the tourist becomes a real traveler.</p>
+
+    <p class="rubric">Our last piece of advice</p>
+
+    <p>We didn't give you a rigid schedule on purpose. Ingredients, in the town and all around it, are many: wineries, tables, trails, wine routes by bike, history, terroir, architecture, festivals and much more. This is our advice, a sketch. Build your own day out of it — to your own rhythm, your own company, your own mood. The best route is the one you put together yourself.</p>
+
+    <blockquote class="voiceq">
+      <span class="who">The living voice of the people of Sant Sadurní d'Anoia</span>
+      "If you've only got one day and no car — don't try to take in the untakeable. Feel the scale beside the big house, go down into the silence of a family cellar, have a vermouth on the square and listen to our story. The town will open up on its own."
+    </blockquote>
+
+  </div>
+</section>
+
+<!-- ======================= ЗОНА «ПРАКТИКА» ======================= -->
+<section class="practice" id="praktika">
+  <div class="wrap">
+
+    <div class="practice__intro">
+      <span class="tag">📋 Practical</span>
+      <h2>Check before you go</h2>
+    </div>
+
+    <ul class="facts">
+      <li><b>Logistics:</b> Barcelona-Sants / Plaça de Catalunya → R4 train (Rodalies) → Sant Sadurní d'Anoia.</li>
+      <li><b>Main rule:</b> book everything in advance — the lunch restaurant included. When you book, don't be shy about calling or writing to the manager: the locals will gladly point you to the best time and the logistics.</li>
+      <li><b>Cava Centre:</b> a tour of the cava center, all the content in Catalan, Spanish and English — language is no problem. Visit times: Tue–Fri at 9:30, 11:00, 12:30 and 16:30; Sat at 11:00, 12:30 and 16:30; Sun at 11:00 and 12:30 (Monday closed). Few places, strictly by booking. Price €6 per person (discounts for pensioners, children, students, large families; the first Sunday of the month, free). Tip: take the 11:00 or 12:30 slot — you come out right in time for the vermouth and lunch. Don't take the 16:30 one: it wrecks the second half of your day.</li>
+      <li><b>Family wineries:</b> almost all visits are in the morning and strictly by prior booking. Pick any winery right within the town limits — everything is within walking distance. Tip: in Google Maps you can type the word celler into the search and the wineries will come up on the map; choose any one.</li>
+      <li><b>Lunch restaurants</b> (book in advance):
+        <ul>
+          <li>Cal Blay Orígens (C/ Josep Rovira, 27 · tel. 93 891 00 32): Thu–Mon 13:00–16:00, Tuesday and Wednesday closed.</li>
+          <li>Canals &amp; Munné (center, Plaça Pau Casals, 6 · tel. 93 891 03 18): open every day, the wine house's own restaurant — the wine and cava are theirs, the atmosphere livelier.</li>
+        </ul>
+      </li>
+      <li><b>Getting around:</b> within the town, go everywhere on foot. If you pick a winery a bit farther out (Codorníu, for example), use a local taxi — it's 5–10 minutes and costs little.</li>
+      <li><b>Simón Coll:</b> the Espai Xocolata (open space) runs every day, with no siesta — you can drop in at any point in the day. The full tour with tasting is a separate format, by booking; ideal for a second day, or as the main goal for those who don't drink alcohol or who come with kids.</li>
+      <li><b>Siesta schedule:</b> the siesta break (roughly 13:30/14:00 to 17:00) affects only the wine shops and stores — Cal Feru included. Restaurants at that hour are open, as it happens, so lunch fits perfectly. And the Espai Xocolata takes no break at all. Plan your visit to Cal Feru strictly for the evening, before you leave.</li>
+      <li><b>Delivery:</b> at any winery, at Cal Feru and at the wine houses you can arrange to have the bottles you buy sent straight to your home or hotel.</li>
+    </ul>
+
+    <!-- ==================== КНОПКИ-ДЕЙСТВИЯ ====================
+         Единый вид. Сегодня: сайт / телефон / карта.
+         Задел на будущее: чтобы кнопка стала бронью, у неё меняются
+         только data-action="book" и href — класс и вид те же. -->
+    <div class="actions">
+      <h3>Actions</h3>
+      <p class="actions__hint">Open the website, call to book, or map the route. Later these same buttons will become direct booking.</p>
+
+      <div class="act-card">
+        <p class="act-card__name">Cava Centre (CIC Fassina)</p>
+        <p class="act-card__meta">The day's main immersion · by booking</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="site" href="https://santsadurni.cat/cic_fassina?idioma=en" target="_blank" rel="noopener"><span class="ico">↗</span>Website</a>
+          <a class="btn btn--ghost" data-action="map" href="https://www.google.com/maps/search/?api=1&query=Cava+Centre+CIC+Fassina+Sant+Sadurni+d%27Anoia" target="_blank" rel="noopener"><span class="ico">◎</span>On the map</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">Cal Blay Orígens</p>
+        <p class="act-card__meta">Lunch · C/ Josep Rovira, 27 · Thu–Mon 13:00–16:00</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="site" href="https://calblay.com/en/restaurant_origens/" target="_blank" rel="noopener"><span class="ico">↗</span>Website</a>
+          <a class="btn btn--ghost" data-action="call" href="tel:+34938910032"><span class="ico">✆</span>Call</a>
+          <a class="btn btn--ghost" data-action="map" href="https://www.google.com/maps/search/?api=1&query=Cal+Blay+Origens+Sant+Sadurni+d%27Anoia" target="_blank" rel="noopener"><span class="ico">◎</span>On the map</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">Canals &amp; Munné</p>
+        <p class="act-card__meta">Lunch · Plaça Pau Casals, 6 · open every day</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="site" href="https://www.canalsimunne.com/en/restaurant/" target="_blank" rel="noopener"><span class="ico">↗</span>Website</a>
+          <a class="btn btn--ghost" data-action="call" href="tel:+34938910318"><span class="ico">✆</span>Call</a>
+          <a class="btn btn--ghost" data-action="map" href="https://www.google.com/maps/search/?api=1&query=Canals+i+Munne+Sant+Sadurni+d%27Anoia" target="_blank" rel="noopener"><span class="ico">◎</span>On the map</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">Espai Xocolata · Simón Coll</p>
+        <p class="act-card__meta">Chocolate since 1840 · open space every day</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="site" href="https://espaixocolata.simoncoll.com/en/" target="_blank" rel="noopener"><span class="ico">↗</span>Website</a>
+          <a class="btn btn--ghost" data-action="map" href="https://www.google.com/maps/search/?api=1&query=Espai+Xocolata+Simon+Coll+Sant+Sadurni+d%27Anoia" target="_blank" rel="noopener"><span class="ico">◎</span>On the map</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">Cal Feru</p>
+        <p class="act-card__meta">End of the day · wine shop · C/ Diputació, 51 · evening</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="site" href="https://www.calferu.com/en/home" target="_blank" rel="noopener"><span class="ico">↗</span>Website</a>
+          <a class="btn btn--ghost" data-action="social" href="https://www.instagram.com/calferu/" target="_blank" rel="noopener"><span class="ico">◍</span>Instagram</a>
+          <a class="btn btn--ghost" data-action="map" href="https://www.google.com/maps/search/?api=1&query=Cal+Feru+Sant+Sadurni+d%27Anoia" target="_blank" rel="noopener"><span class="ico">◎</span>On the map</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">Family wineries nearby</p>
+        <p class="act-card__meta">Type «celler» in the map — pick any one in town</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="map" href="https://www.google.com/maps/search/?api=1&query=celler+Sant+Sadurni+d%27Anoia" target="_blank" rel="noopener"><span class="ico">◎</span>Wineries on the map</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">Taxi Sant Sadurní</p>
+        <p class="act-card__meta">For farther wineries (e.g. Codorníu) · 5–10 min</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="call" href="tel:+34938910428"><span class="ico">✆</span>Call</a>
+          <a class="btn btn--ghost" data-action="site" href="https://santsadurni.cat/taxi" target="_blank" rel="noopener"><span class="ico">↗</span>Website</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">R4 train (Rodalies)</p>
+        <p class="act-card__meta">Barcelona ↔ Sant Sadurní d'Anoia · timetable</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="site" href="https://rodalies.gencat.cat" target="_blank" rel="noopener"><span class="ico">↗</span>Timetable</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">Codorníu</p>
+        <p class="act-card__meta">The wine «cathedral» by architect Puig i Cadafalch</p>
+        <div class="btns">
+          <a class="btn btn--primary" data-action="site" href="https://www.codorniu.com" target="_blank" rel="noopener"><span class="ico">↗</span>Website</a>
+          <a class="btn btn--ghost" data-action="map" href="https://www.google.com/maps/search/?api=1&query=Codorniu+Sant+Sadurni+d%27Anoia" target="_blank" rel="noopener"><span class="ico">◎</span>On the map</a>
+        </div>
+      </div>
+
+      <div class="act-card">
+        <p class="act-card__name">Context · for the curious</p>
+        <p class="act-card__meta">The Fil·loxera festival and the Amatller palace from the story</p>
+        <div class="btns">
+          <a class="btn btn--ghost" data-action="site" href="https://santsadurni.cat" target="_blank" rel="noopener"><span class="ico">↗</span>Festa de la Fil·loxera</a>
+          <a class="btn btn--ghost" data-action="site" href="https://amatller.org/en/" target="_blank" rel="noopener"><span class="ico">↗</span>Casa Amatller</a>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="colophon">Sant Sadurní d'Anoia · Penedès — an editorial gift guide.<br>Build your own day. The best route is the one you put together yourself.</p>
+
+  </div>
+</section>
+
+<!-- ======================= ПОДВАЛ ======================= -->
+<footer class="sitefoot">
+  <p class="discl">Opening hours, prices and schedules may change — check before you go. This is editorial advice, not an official source.</p>
+  <p class="rights">© 2026 · Anton Pavlyuk · Rosalia · Andrew Ashurst</p>
+  <p>Contact: <a href="mailto:Penedesvino1@gmail.com">Penedesvino1@gmail.com</a></p>
+  <p class="credits">Photos of the Freixenet buildings: <a href="https://commons.wikimedia.org/wiki/Category:Caves_Freixenet" target="_blank" rel="noopener">Enric, CC BY-SA 4.0</a> and <a href="https://commons.wikimedia.org/wiki/File:Montserrat_-_50.jpg" target="_blank" rel="noopener">Maria Rosa Ferré, CC BY-SA 2.0</a>, via Wikimedia Commons; images edited.</p>
+</footer>
+
+</div><!-- /shell -->
+
+<!-- Лайтбокс: увеличение фото по тапу/клику, без библиотек -->
+<div id="lb" class="lb" hidden><img class="lb__img" alt=""></div>
+<script>
+(function(){
+  var lb=document.getElementById('lb'), img=lb.querySelector('.lb__img');
+  var mobile=window.matchMedia('(max-width:768px),(pointer:coarse)').matches;
+  function open(src,alt,modest){
+    img.src=src; img.alt=alt||'';
+    lb.classList.toggle('is-modest',modest);
+    lb.classList.toggle('is-full',!modest);
+    lb.hidden=false; document.body.style.overflow='hidden';
+  }
+  function close(){lb.hidden=true;img.src='';document.body.style.overflow='';}
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('figure img, .strip img');
+    if(!t) return;
+    var inStrip=!!e.target.closest('.strip');
+    if(mobile){ open(t.currentSrc||t.src, t.alt, false); }      // смартфон: крупно
+    else if(inStrip){ open(t.currentSrc||t.src, t.alt, true); } // ПК: только серия, умеренно
+    // ПК + одиночное фото → ничего не делаем, десктоп не ломаем
+  });
+  lb.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden)close();});
+})();
+</script>
+
+</body>
+</html>
