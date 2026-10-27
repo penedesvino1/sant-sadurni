@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encuesta · Penedés</title>
+<style>
+  :root{ --bg:#f4f1ea; --card:#ffffff; --ink:#2b2b2b; --muted:#6b6b6b; --wine:#7b1e3b; --line:#e6e0d6; --ok:#1b7a3d; --err:#b3261e; }
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);margin:0;padding:0;line-height:1.5}
+  .wrap{max-width:640px;margin:0 auto;padding:16px 16px 60px}
+  header{padding:8px 0 6px}
+  .brand{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--wine);font-weight:700}
+  #langbar{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+  #langbar button{border:1px solid var(--line);background:#fff;color:#555;font-size:12.5px;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer}
+  #langbar button.on{background:var(--wine);color:#fff;border-color:var(--wine)}
+  .intro{background:var(--card);border-radius:14px;padding:18px 18px;margin:12px 0 22px;box-shadow:0 3px 14px rgba(0,0,0,.05);white-space:pre-line;font-size:15px;color:#3a3a3a}
+  .q{background:var(--card);border-radius:14px;padding:18px 18px 16px;margin:0 0 14px;box-shadow:0 3px 14px rgba(0,0,0,.05);scroll-margin-top:16px}
+  .q.hidden{display:none}
+  .q h3{font-size:16px;margin:0 0 4px;font-weight:650}
+  .q .req{color:var(--wine);margin-left:3px}
+  .q .hint{font-size:12.5px;color:var(--muted);margin:0 0 10px}
+  label.opt{display:flex;align-items:flex-start;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:10px;margin:7px 0;cursor:pointer;font-size:14.5px;transition:border-color .12s,background .12s}
+  label.opt:hover{border-color:#cdbfae}
+  label.opt input{margin-top:2px;flex:0 0 auto;width:18px;height:18px;accent-color:var(--wine)}
+  label.opt.sel{border-color:var(--wine);background:#fbf3f5}
+  input[type=text],input[type=email],select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;margin-top:4px}
+  input:focus,select:focus{outline:none;border-color:var(--wine)}
+  .gdpr{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.45}
+  .otro{margin-top:6px}
+  .warn{color:var(--err);font-size:13px;margin-top:8px;display:none;font-weight:600}
+  .warn.show{display:block}
+  .submit{background:var(--wine);color:#fff;border:0;font-size:17px;font-weight:600;padding:16px;border-radius:12px;width:100%;cursor:pointer;margin-top:8px}
+  .submit:disabled{opacity:.6}
+  .hp{position:absolute!important;left:-9999px!important;top:auto;width:1px;height:1px;overflow:hidden}
+  .msg-global{color:var(--err);font-size:14px;font-weight:600;margin:10px 2px;min-height:20px}
+  #gracias{display:none;text-align:center;background:var(--card);border-radius:16px;padding:36px 22px;box-shadow:0 4px 18px rgba(0,0,0,.07);margin-top:26px}
+  #gracias h2{color:var(--wine);font-size:22px;margin:6px 0 10px}
+  #gracias p{font-size:15.5px;color:#444;margin:0 0 20px}
+  #gracias a.btn{display:inline-block;background:var(--wine);color:#fff;text-decoration:none;padding:14px 26px;border-radius:12px;font-size:16px;font-weight:600}
+  .dev{font-size:11px;color:#b7ae9f;text-align:center;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="encuesta">
+    <header><div class="brand">Penedés</div></header>
+    <div id="langbar"></div>
+    <div class="intro" id="intro"></div>
+    <form id="form" novalidate></form>
+    <div class="hp" aria-hidden="true"><label>No rellenar / Do not fill<input type="text" id="hp_url" name="hp_url" tabindex="-1" autocomplete="off"></label></div>
+    <div class="dev" id="privacyNote" style="margin-top:14px"></div>
+    <div class="msg-global" id="msgGlobal"></div>
+    <button type="button" class="submit" id="btnSend">Enviar</button>
+  </div>
+  <div id="gracias">
+    <div style="font-size:40px">🍇</div>
+    <h2 id="grTitle"></h2>
+    <p id="grText"></p>
+    <a class="btn" id="grLink" href="#" target="_blank" rel="noopener">→</a>
+  </div>
+</div>
+
+<script>
+/* ===== 1. НАСТРОЙКИ ===== */
+var URL_RECEPTOR = "https://script.google.com/macros/s/AKfycbyUy1xXdbacYn0swukvky7qXRHvcqBeTpt2zFWw038kcIaVzMyY9xFrl5f46ioCw0L_/exec";
+
+var GUIAS = {
+  es:{ url:"https://penedesvino1.github.io/sant-sadurni/",            name:"Sant Sadurní d'Anoia — guía · un día" },
+  ca:{ url:"https://penedesvino1.github.io/sant-sadurni/index-ca.html", name:"Sant Sadurní d'Anoia — guia · un dia" },
+  en:{ url:"https://penedesvino1.github.io/sant-sadurni/index-en.html", name:"Sant Sadurní d'Anoia — one-day guide" },
+  de:{ url:"https://penedesvino1.github.io/sant-sadurni/index-de.html", name:"Sant Sadurní d'Anoia — Ein-Tages-Guide" },
+  uk:{ url:"https://penedesvino1.github.io/sant-sadurni/index-uk.html", name:"Sant Sadurní d'Anoia — путівник на один день" },
+  ru:{ url:"https://penedesvino1.github.io/sant-sadurni/index-ru.html", name:"Sant Sadurní d'Anoia — гид на один день" }
+};
+
+var LANG_ORDER = ["es","ca","en","de","uk","ru"];
+var LANG_NAMES = { es:"ES", ca:"CA", en:"EN", de:"DE", uk:"UA", ru:"RU" };
+var PRIV = {
+  es:"Medimos el uso de forma anónima. Sin cookies ni datos personales.",
+  ca:"Mesurem l'ús de manera anònima. Sense cookies ni dades personals.",
+  en:"We measure usage anonymously. No cookies, no personal data.",
+  de:"Wir messen die Nutzung anonym. Keine Cookies, keine personenbezogenen Daten.",
+  uk:"Ми рахуємо анонімну статистику використання. Без куки та особистих даних.",
+  ru:"Мы считаем анонимную статистику использования. Без куки, без личных данных."
+};
+
+/* ===== 2. СТРУКТУРА (одна на все языки) ===== */
+var QUESTIONS = [
+  { id:"q1",  type:"text",     branch:"all", required:false },
+  { id:"q2",  type:"radio",    branch:"all", required:true, fork:true },
+  { id:"a1",  type:"radio",    branch:"A",   required:true },
+  { id:"a2",  type:"text",     branch:"A",   required:false },
+  { id:"a3",  type:"radio",    branch:"A",   required:true },
+  { id:"b1",  type:"radio",    branch:"B",   required:true },
+  { id:"b2",  type:"checkbox", branch:"B",   required:true,  max:3, shuffle:true },
+  { id:"b3",  type:"radio",    branch:"B",   required:false },
+  { id:"c0",  type:"radio",    branch:"all", required:true },
+  { id:"c1",  type:"checkbox", branch:"all", required:false },
+  { id:"c2",  type:"radio",    branch:"all", required:true },
+  { id:"c3",  type:"radio",    branch:"all", required:true },
+  { id:"c4",  type:"checkbox", branch:"all", required:true,  max:3, shuffle:true },
+  { id:"c5",  type:"radio",    branch:"all", required:true },
+  { id:"c6",  type:"radio",    branch:"all", required:true },
+  { id:"c7",  type:"radio",    branch:"all", required:true },
+  { id:"c8",  type:"radio",    branch:"all", required:true },
+  { id:"c9",  type:"checkbox", branch:"all", required:true,  max:3, shuffle:true },
+  { id:"c10", type:"checkbox", branch:"all", required:true,  max:3, shuffle:true, other:true },
+  { id:"c11", type:"text",     branch:"all", required:false },
+  { id:"email", type:"email",  branch:"all", required:false, gdpr:true },
+  { id:"edad",  type:"select", branch:"all", required:false },
+  { id:"genero",type:"radio",  branch:"all", required:false }
+];
+
+/* ===== 3. ТЕКСТЫ ===== */
+var DICT = {
+ es:{
+  brand:"Penedés · Investigación",
+  intro:"¡Hola! ¿Tienes 2–3 minutos?\n\nEstamos investigando cómo elige la gente sus escapadas de un día y sus salidas fuera de la ciudad. Nuestro ejemplo principal es la preciosa comarca del Penedés, junto a Barcelona, famosa por sus bodegas, su historia y su naturaleza.\n\nNo importa dónde vivas ni si has estado en Cataluña:\n• si eres de aquí o expatriado, nos interesa tu experiencia de ocio cerca de casa;\n• si vives en otro país o es la primera vez que oyes «Penedés», queremos saber cómo planificas este tipo de salidas.\n\nLa encuesta es anónima. Al final, un regalo para todos: una guía de un día de Sant Sadurní d'Anoia. El email, opcional, al final.",
+  q1:{label:"Para el mapa: ¿en qué país y región/provincia vives?", ph:"Por ejemplo: España, Cataluña"},
+  q2:{label:"¿Dónde vives?", options:["En el Penedés (Vilafranca, Sant Sadurní, Vilanova y alrededores)","En Barcelona o cerca","En otra zona de Cataluña (Girona/Costa Brava, Tarragona, Lleida…)","En otra región de España","En otro país"]},
+  a1:{label:"Las bodegas cercanas, ¿las conoces?", options:["Sí, podría nombrarlas — he estado","Sé que existen, pero no las recuerdo","No, no conozco ninguna — y es normal"]},
+  a2:{label:"Si puedes, escribe cuál.", ph:"Nombre de la bodega"},
+  a3:{label:"En los últimos 12 meses, ¿has estado en alguna bodega o cata en Cataluña?", options:["Sí, en mi zona","Sí, en otra","No"]},
+  b1:{label:"¿Has estado en zonas vinícolas de Cataluña (Penedés, Priorat, Alella…)?", options:["Sí, he estado","No, pero me gustaría","No, y no lo había pensado"]},
+  b2:{label:"Cuando vas a una zona vinícola, ¿qué es lo más importante para ti?", hint:"Hasta 3", options:["La calidad de los vinos","La visita a la bodega/su historia","Hablar con el viticultor","El paisaje/las vistas","La comida/gastronomía","El precio/la relación calidad-precio","El ambiente del lugar","No voy a zonas vinícolas"]},
+  b3:{label:"¿Qué relación tienes con Cataluña?", options:["Vivo aquí parte del año","Tengo casa o familia aquí","Vengo de vacaciones","Estuve una vez","Nunca he estado"]},
+  c0:{label:"¿Hay cerca de tu ciudad alguna zona vinícola o rural de la que hayas oído hablar pero a la que nunca hayas ido?", options:["Sí, y he estado","Sí, he oído hablar pero no he ido","No hay ninguna cerca","No lo había pensado"]},
+  c1:{label:"¿Qué te suena de esto?", hint:"Varias posibles", options:["DO Penedès","DO Alella","DO Cava","Via Augusta (calzada antigua)","Ruta del Vino","Miravinyes (miradores entre viñedos)","Nada de esto — lo oigo por primera vez"]},
+  c2:{label:"¿Alguna vez has seguido en un viaje una ruta de un día ya preparada por alguien (un plan hecho, un mapa-pasaporte de la zona, un tour «día perfecto»)?", options:["Sí, y fue cómodo","Sí, pero no me convenció","No, normalmente lo organizo yo"]},
+  c3:{label:"¿Con qué frecuencia haces escapadas de un día por placer?", options:["Una vez al mes o más","Varias veces al año","Pocas veces","Casi nunca"]},
+  c4:{label:"¿Qué te atrae de una escapada así?", hint:"Hasta 3", options:["Vino/cava","Gastronomía","Naturaleza, senderismo","Bici/ciclismo","Viajar en coche/autocaravana","Historia/patrimonio","Ocio en familia","Fiestas/eventos","Amigos/compañía","Sitios bonitos/fotos"]},
+  c5:{label:"¿Qué relación tienes con el vino?", options:["Me encanta, entiendo","Lo disfruto, pero sin profundizar","Bebo poco, en ocasiones","El vino no es lo mío (pero bebo otro alcohol)","No bebo alcohol"]},
+  c6:{label:"¿Cuánto tiempo de ida te parece razonable para una escapada así?", options:["hasta 30 min","hasta 1 h","hasta 1,5 h","más"]},
+  c7:{label:"¿Irías sin coche (tren/autobús)?", options:["Sí, sin problema","Solo si se llega con facilidad","No, necesito coche"]},
+  c8:{label:"¿Cómo planificas estas escapadas?", options:["Con antelación, en casa","Sobre la marcha, desde el móvil","Mixto"]},
+  c9:{label:"¿Qué usas de verdad cuando planificas una salida al campo o buscas sitios?", hint:"Hasta 3", options:["Google/mapas","Redes sociales (Insta/TikTok)","Amigos/familia","Apps de aire libre (Komoot/Wikiloc/AllTrails)","Vino/comida (Vivino/TheFork)","Plataformas de tours (GetYourGuide/Viator)","Webs oficiales de las zonas","IA (ChatGPT, etc.)","Nada, solo el buscador"]},
+  c10:{label:"¿Qué es lo que más te impide salir?", hint:"Hasta 3", other:"Otro:", options:["No sé a dónde ir / no tengo tiempo de buscar","Logística complicada (llegar/reservar)","Caro","No tengo con quién / cuesta reunir gente","Nada, ya salgo igualmente"]},
+  c11:{label:"¿Quieres añadir algo?", ph:"Si quieres"},
+  email:{label:"Email — para enviarte nuevas guías y avisarte del lanzamiento (opcional)", gdpr:"El email es opcional: la guía la recibes igualmente al final. Solo lo usamos para enviarte nuevas guías y avisarte del lanzamiento. Lo guardamos nosotros, no lo cedemos a terceros. Si quieres borrarlo, escribe a penedesvino1@gmail.com y lo quitamos sin preguntas.", ph:"nombre@email.com"},
+  edad:{label:"Edad", options:["18–25","26–35","36–45","46–55","56–65","65+","Prefiero no decirlo"]},
+  genero:{label:"Género", options:["Hombre","Mujer","Otro","Prefiero no decirlo"]},
+  ui:{required:"Por favor, responde las preguntas marcadas ↑", max:"Puedes elegir máximo tres", emailBad:"Revisa el email", sending:"Enviando…", send:"Enviar respuestas", thanksTitle:"¡Gracias!", thanksGift:"Tu regalo — la guía «{guia}».", openGuide:"Abrir la guía →"}
+ },
+
+ ca:{
+  brand:"Penedès · Recerca",
+  intro:"Hola! Tens 2–3 minuts?\n\nEstem investigant com tria la gent les escapades d'un dia i les sortides fora de la ciutat. El nostre exemple principal és la preciosa comarca del Penedès, al costat de Barcelona, coneguda pels seus cellers, la seva història i la seva natura.\n\nTant se val on visquis ni si has estat a Catalunya:\n• si ets d'aquí o expatriat, ens interessa la teva experiència de lleure a prop de casa;\n• si vius en un altre país o sents «Penedès» per primera vegada, volem saber com planifiques aquest tipus de sortides.\n\nL'enquesta és anònima. Al final, un regal per a tothom: una guia d'un dia de Sant Sadurní d'Anoia. L'email, opcional, al final.",
+  q1:{label:"Per al mapa: a quin país i regió/província vius?", ph:"Per exemple: Espanya, Catalunya"},
+  q2:{label:"On vius?", options:["Al Penedès (Vilafranca, Sant Sadurní, Vilanova i voltants)","A Barcelona o a prop","En una altra zona de Catalunya (Girona/Costa Brava, Tarragona, Lleida…)","En una altra regió d'Espanya","En un altre país"]},
+  a1:{label:"Els cellers propers, els coneixes?", options:["Sí, en podria dir — hi he estat","Sé que existeixen, però no en recordo cap","No, no en conec cap — i és normal"]},
+  a2:{label:"Si pots, escriu quin.", ph:"Nom del celler"},
+  a3:{label:"En els últims 12 mesos, has estat en algun celler o tast a Catalunya?", options:["Sí, a la meva zona","Sí, en una altra","No"]},
+  b1:{label:"Has estat en zones vinícoles de Catalunya (Penedès, Priorat, Alella…)?", options:["Sí, hi he estat","No, però m'agradaria","No, i no hi havia pensat"]},
+  b2:{label:"Quan vas a una zona vinícola, què és el més important per a tu?", hint:"Fins a 3", options:["La qualitat dels vins","La visita al celler/la història","Parlar amb el viticultor","El paisatge/les vistes","El menjar/gastronomia","El preu/la relació qualitat-preu","L'ambient del lloc","No vaig a zones vinícoles"]},
+  b3:{label:"Quina relació tens amb Catalunya?", options:["Hi visc part de l'any","Hi tinc casa o família","Hi vinc de vacances","Hi vaig estar un cop","No hi he estat mai"]},
+  c0:{label:"Hi ha a prop de la teva ciutat alguna zona vinícola o rural de la qual hagis sentit a parlar però on no hagis anat mai?", options:["Sí, i hi he estat","Sí, n'he sentit a parlar però no hi he anat","No n'hi ha cap a prop","No hi havia pensat"]},
+  c1:{label:"Què et sona d'això?", hint:"Diverses possibles", options:["DO Penedès","DO Alella","DO Cava","Via Augusta (calçada antiga)","Ruta del Vi","Miravinyes (miradors entre vinyes)","Res d'això — ho sento per primera vegada"]},
+  c2:{label:"Alguna vegada has seguit en un viatge una ruta d'un dia ja preparada per algú (un pla fet, un mapa-passaport de la zona, un tour «dia perfecte»)?", options:["Sí, i va ser còmode","Sí, però no em va convèncer","No, normalment l'organitzo jo"]},
+  c3:{label:"Amb quina freqüència fas escapades d'un dia per plaer?", options:["Un cop al mes o més","Diverses vegades l'any","Poques vegades","Gairebé mai"]},
+  c4:{label:"Què t'atrau d'una escapada així?", hint:"Fins a 3", options:["Vi/cava","Gastronomia","Natura, senderisme","Bici/ciclisme","Viatjar en cotxe/autocaravana","Història/patrimoni","Lleure en família","Festes/esdeveniments","Amics/companyia","Llocs bonics/fotos"]},
+  c5:{label:"Quina relació tens amb el vi?", options:["M'encanta, hi entenc","El gaudeixo, però sense aprofundir","En bec poc, de tant en tant","El vi no és el meu (però bec un altre alcohol)","No bec alcohol"]},
+  c6:{label:"Quant de temps d'anada et sembla raonable per a una escapada així?", options:["fins a 30 min","fins a 1 h","fins a 1,5 h","més"]},
+  c7:{label:"Hi aniries sense cotxe (tren/autobús)?", options:["Sí, sense problema","Només si s'hi arriba fàcilment","No, necessito cotxe"]},
+  c8:{label:"Com planifiques aquestes escapades?", options:["Amb antelació, a casa","Sobre la marxa, des del mòbil","Mixt"]},
+  c9:{label:"Què fas servir de debò quan planifiques una sortida al camp o busques llocs?", hint:"Fins a 3", options:["Google/mapes","Xarxes socials (Insta/TikTok)","Amics/família","Apps d'aire lliure (Komoot/Wikiloc/AllTrails)","Vi/menjar (Vivino/TheFork)","Plataformes de tours (GetYourGuide/Viator)","Webs oficials de les zones","IA (ChatGPT, etc.)","Res, només el cercador"]},
+  c10:{label:"Què és el que més t'impedeix sortir?", hint:"Fins a 3", other:"Altres:", options:["No sé on anar / no tinc temps de buscar","Logística complicada (arribar/reservar)","Car","No tinc amb qui / costa reunir gent","Res, ja surto igualment"]},
+  c11:{label:"Vols afegir alguna cosa?", ph:"Si vols"},
+  email:{label:"Email — per enviar-te noves guies i avisar-te del llançament (opcional)", gdpr:"L'email és opcional: la guia la reps igualment al final. Només l'utilitzem per enviar-te noves guies i avisar-te del llançament. El guardem nosaltres, no el cedim a tercers. Si el vols esborrar, escriu a penedesvino1@gmail.com i el traiem sense preguntes.", ph:"nom@email.com"},
+  edad:{label:"Edat", options:["18–25","26–35","36–45","46–55","56–65","65+","Prefereixo no dir-ho"]},
+  genero:{label:"Gènere", options:["Home","Dona","Altres","Prefereixo no dir-ho"]},
+  ui:{required:"Si us plau, respon les preguntes marcades ↑", max:"Pots triar-ne un màxim de tres", emailBad:"Revisa l'email", sending:"Enviant…", send:"Enviar respostes", thanksTitle:"Gràcies!", thanksGift:"El teu regal — la guia «{guia}».", openGuide:"Obrir la guia →"}
+ },
+
+ en:{
+  brand:"Penedés · Research",
+  intro:"Hi! Got 2–3 minutes?\n\nWe're researching how people choose day trips and getaways out of the city. Our main example is the beautiful Penedés region near Barcelona, known for its wineries, history and nature.\n\nIt doesn't matter where you live or whether you've been to Catalonia:\n• local or expat — we're interested in how you spend leisure time near home;\n• in another country, or hearing «Penedés» for the first time — we want to know how you plan trips like these.\n\nThe survey is anonymous. At the end, a gift for everyone: a ready one-day guide to Sant Sadurní d'Anoia. Email optional, at the end.",
+  q1:{label:"For the map: which country and region/state do you live in?", ph:"e.g. New York, USA"},
+  q2:{label:"Where do you live?", options:["In the Penedés (Vilafranca, Sant Sadurní, Vilanova and around)","In or near Barcelona","Elsewhere in Catalonia (Girona/Costa Brava, Tarragona, Lleida…)","In another region of Spain","In another country"]},
+  a1:{label:"Do you know the wineries near you?", options:["Yes, I could name them — I've been","I know they exist, but can't recall any","No, I don't know any — and that's fine"]},
+  a2:{label:"If you can, write which one.", ph:"Winery name"},
+  a3:{label:"In the last 12 months, have you visited a winery or tasting in Catalonia?", options:["Yes, in my area","Yes, elsewhere","No"]},
+  b1:{label:"Have you been to wine regions in Catalonia (Penedés, Priorat, Alella…)?", options:["Yes, I have","No, but I'd like to","No, and hadn't thought of it"]},
+  b2:{label:"When you go to a wine region, what matters most to you?", hint:"Up to 3", options:["Wine quality","Cellar tour/history","Talking to the winemaker","Scenery/views","Food/gastronomy","Price/value","The atmosphere of the place","I don't go to wine regions"]},
+  b3:{label:"What's your connection to Catalonia?", options:["I live here part of the year","I have a home or family here","I come on holiday","I've been once","Never been"]},
+  c0:{label:"Is there a wine or rural region near your city that you've heard of but never visited?", options:["Yes, and I've been","Yes, heard of it but haven't gone","No such place nearby","Hadn't thought about it"]},
+  c1:{label:"Which of these do you recognise?", hint:"Several possible", options:["DO Penedès","DO Alella","DO Cava","Via Augusta (ancient road)","Ruta del Vino","Miravinyes (viewpoints among the vineyards)","None of these — first time I hear them"]},
+  c2:{label:"On a trip, have you ever followed a ready-made one-day route someone put together for you (a ready plan, a region map-passport, a «perfect day» tour)?", options:["Yes, and it was convenient","Yes, but it didn't impress me","No, I usually plan it myself"]},
+  c3:{label:"How often do you take day trips just for the experience?", options:["Once a month or more","A few times a year","Rarely","Almost never"]},
+  c4:{label:"What draws you to a trip like that?", hint:"Up to 3", options:["Wine/sparkling","Gastronomy","Nature, hiking","Cycling/biking","Road trip/campervan","History/heritage","Family time","Festivals/events","Friends/company","Beautiful spots/photos"]},
+  c5:{label:"What's your relationship with wine?", options:["I love it, I know it","I enjoy it, but don't go deep","I drink rarely, on occasion","Wine's not for me (but I drink other alcohol)","I don't drink alcohol at all"]},
+  c6:{label:"How much travel time one way feels reasonable for such a trip?", options:["up to 30 min","up to 1 h","up to 1.5 h","more"]},
+  c7:{label:"Would you go without a car (train/bus)?", options:["Yes, easily","Only if it's easy to get there","No, I need a car"]},
+  c8:{label:"How do you plan these trips?", options:["In advance, at home","Spontaneously, from my phone","A mix"]},
+  c9:{label:"What do you actually use when planning a trip out of town or looking for places?", hint:"Up to 3", options:["Google/maps","Social media (Insta/TikTok)","Friends/family","Outdoor apps (Komoot/Wikiloc/AllTrails)","Wine/food (Vivino/TheFork)","Tour platforms (GetYourGuide/Viator)","Official regional websites","AI (ChatGPT, etc.)","Nothing, just a search engine"]},
+  c10:{label:"What most often stops you from going?", hint:"Up to 3", other:"Other:", options:["I don't know where to go / no time to search","Complicated logistics (getting there/booking)","Expensive","No one to go with / hard to gather people","Nothing, I get out anyway"]},
+  c11:{label:"Anything to add?", ph:"If you like"},
+  email:{label:"Email — to send you new guides and let you know about the launch (optional)", gdpr:"Email is optional: you get the guide at the end anyway. We only use it to send you new guides and tell you about the launch. We keep it ourselves and don't pass it to third parties. Want it deleted? Write to penedesvino1@gmail.com and we'll remove it, no questions.", ph:"name@email.com"},
+  edad:{label:"Age", options:["18–25","26–35","36–45","46–55","56–65","65+","Prefer not to say"]},
+  genero:{label:"Gender", options:["Male","Female","Other","Prefer not to say"]},
+  ui:{required:"Please answer the marked questions ↑", max:"You can pick at most three", emailBad:"Check the email address", sending:"Sending…", send:"Send answers", thanksTitle:"Thank you!", thanksGift:"Your gift — the guide «{guia}».", openGuide:"Open the guide →"}
+ },
+
+ de:{
+  brand:"Penedés · Studie",
+  intro:"Hallo! Hast du 2–3 Minuten?\n\nWir erforschen, wie Menschen Tagesausflüge und Auszeiten aufs Land wählen. Unser Hauptbeispiel ist die schöne Region Penedés bei Barcelona, bekannt für ihre Weingüter, ihre Geschichte und ihre Natur.\n\nEgal, wo du wohnst oder ob du schon in Katalonien warst:\n• ob einheimisch oder zugezogen — uns interessiert, wie du deine Freizeit in der Nähe verbringst;\n• wohnst du in einem anderen Land oder hörst «Penedés» zum ersten Mal — uns interessiert, wie du solche Ausflüge planst.\n\nDie Umfrage ist anonym. Am Ende ein Geschenk für alle: ein fertiger Ein-Tages-Guide für Sant Sadurní d'Anoia. E-Mail optional, am Ende.",
+  q1:{label:"Für die Karte: In welchem Land und welcher Region/welchem Bundesland wohnst du?", ph:"z. B. Deutschland, Berlin"},
+  q2:{label:"Wo wohnst du?", options:["Im Penedés (Vilafranca, Sant Sadurní, Vilanova und Umgebung)","In oder bei Barcelona","Woanders in Katalonien (Girona/Costa Brava, Tarragona, Lleida…)","In einer anderen Region Spaniens","In einem anderen Land"]},
+  a1:{label:"Kennst du die Weingüter in deiner Nähe?", options:["Ja, ich könnte welche nennen — war dort","Ich weiß, dass es sie gibt, erinnere mich aber nicht","Nein, ich kenne keine — und das ist okay"]},
+  a2:{label:"Wenn du kannst, schreib welches.", ph:"Name des Weinguts"},
+  a3:{label:"Warst du in den letzten 12 Monaten auf einem Weingut oder bei einer Verkostung in Katalonien?", options:["Ja, in meiner Gegend","Ja, woanders","Nein"]},
+  b1:{label:"Warst du schon in Weinregionen Kataloniens (Penedés, Priorat, Alella…)?", options:["Ja, war ich","Nein, aber würde gern","Nein, und hatte nicht daran gedacht"]},
+  b2:{label:"Wenn du in eine Weinregion fährst, was ist dir am wichtigsten?", hint:"Bis zu 3", options:["Die Qualität der Weine","Die Kellerführung/Geschichte","Das Gespräch mit dem Winzer","Die Landschaft/Aussicht","Essen/Gastronomie","Preis/Preis-Leistung","Die Atmosphäre des Ortes","Ich fahre nicht in Weinregionen"]},
+  b3:{label:"Welche Verbindung hast du zu Katalonien?", options:["Ich lebe einen Teil des Jahres hier","Ich habe hier ein Haus oder Familie","Ich komme im Urlaub","War einmal da","Noch nie da gewesen"]},
+  c0:{label:"Gibt es nahe deiner Stadt eine Wein- oder Landregion, von der du gehört hast, aber nie hingefahren bist?", options:["Ja, und war dort","Ja, gehört, aber nicht hingefahren","Nein, nichts in der Nähe","Hatte ich nicht bedacht"]},
+  c1:{label:"Was kommt dir davon bekannt vor?", hint:"Mehrere möglich", options:["DO Penedès","DO Alella","DO Cava","Via Augusta (alte Römerstraße)","Ruta del Vino","Miravinyes (Aussichtspunkte in den Weinbergen)","Nichts davon — höre ich zum ersten Mal"]},
+  c2:{label:"Bist du auf einer Reise schon mal einer fertigen Tagesroute gefolgt, die jemand für dich zusammengestellt hat (fertiger Plan, Karten-Pass der Region, «perfekter Tag»-Tour)?", options:["Ja, und es war praktisch","Ja, aber hat mich nicht überzeugt","Nein, ich plane meist selbst"]},
+  c3:{label:"Wie oft machst du Tagesausflüge einfach fürs Erlebnis?", options:["Einmal im Monat oder öfter","Ein paar Mal im Jahr","Selten","Fast nie"]},
+  c4:{label:"Was reizt dich an so einem Ausflug?", hint:"Bis zu 3", options:["Wein/Sekt","Gastronomie","Natur, Wandern","Rad/Biking","Auto-/Camper-Reise","Geschichte/Kulturerbe","Familienzeit","Feste/Events","Freunde/Gesellschaft","Schöne Orte/Fotos"]},
+  c5:{label:"Wie stehst du zu Wein?", options:["Ich liebe ihn, kenne mich aus","Ich genieße ihn, ohne tief einzusteigen","Ich trinke selten, zu Anlässen","Wein ist nicht meins (aber anderen Alkohol trinke ich)","Ich trinke gar keinen Alkohol"]},
+  c6:{label:"Wie viel Anfahrt pro Richtung ist für so einen Ausflug okay?", options:["bis 30 Min","bis 1 Std","bis 1,5 Std","mehr"]},
+  c7:{label:"Würdest du ohne Auto fahren (Zug/Bus)?", options:["Ja, problemlos","Nur wenn man gut hinkommt","Nein, ich brauche ein Auto"]},
+  c8:{label:"Wie planst du solche Ausflüge?", options:["Vorab, zu Hause","Spontan, vom Handy unterwegs","Gemischt"]},
+  c9:{label:"Was nutzt du wirklich, wenn du einen Ausflug aufs Land planst oder Orte suchst?", hint:"Bis zu 3", options:["Google/Karten","Soziale Medien (Insta/TikTok)","Freunde/Familie","Outdoor-Apps (Komoot/Wikiloc/AllTrails)","Wein/Essen (Vivino/TheFork)","Tour-Plattformen (GetYourGuide/Viator)","Offizielle Regions-Websites","KI (ChatGPT usw.)","Nichts, nur die Suchmaschine"]},
+  c10:{label:"Was hält dich am häufigsten davon ab, loszufahren?", hint:"Bis zu 3", other:"Sonstiges:", options:["Weiß nicht wohin / keine Zeit zu suchen","Komplizierte Logistik (Anreise/Buchung)","Zu teuer","Niemand zum Mitkommen / schwer Leute zusammenzubekommen","Nichts, ich komme sowieso raus"]},
+  c11:{label:"Möchtest du noch etwas ergänzen?", ph:"Wenn du magst"},
+  email:{label:"E-Mail — um dir neue Guides zu schicken und über den Start zu informieren (optional)", gdpr:"Die E-Mail ist freiwillig: den Guide bekommst du am Ende sowieso. Wir nutzen sie nur, um dir neue Guides zu schicken und über den Start zu informieren. Wir speichern sie bei uns und geben sie nicht an Dritte weiter. Zum Löschen schreib an penedesvino1@gmail.com — wir entfernen sie ohne Nachfragen.", ph:"name@email.com"},
+  edad:{label:"Alter", options:["18–25","26–35","36–45","46–55","56–65","65+","Möchte ich nicht angeben"]},
+  genero:{label:"Geschlecht", options:["Männlich","Weiblich","Divers","Möchte ich nicht angeben"]},
+  ui:{required:"Bitte beantworte die markierten Fragen ↑", max:"Du kannst höchstens drei auswählen", emailBad:"Prüfe die E-Mail-Adresse", sending:"Senden…", send:"Antworten senden", thanksTitle:"Danke!", thanksGift:"Dein Geschenk — der Guide «{guia}».", openGuide:"Guide öffnen →"}
+ },
+
+ uk:{
+  brand:"Пенедес · Дослідження",
+  intro:"Привіт! Маєш 2–3 хвилини?\n\nМи досліджуємо, як люди обирають одноденні поїздки та відпочинок за містом. Наш головний приклад — мальовничий регіон Пенедес (Penedés) біля Барселони, відомий своїми винарнями, історією та природою.\n\nНеважливо, де ти живеш і чи був у Каталонії:\n• місцевий чи експат — нам цікавий твій досвід відпочинку поряд із домом;\n• живеш в іншій країні або чуєш «Пенедес» уперше — нам важливо зрозуміти, як ти зазвичай плануєш такі поїздки.\n\nОпитування анонімне. Наприкінці на всіх чекає подарунок — готовий путівник на один день по містечку Sant Sadurní d'Anoia. Email — за бажанням, у самому кінці.",
+  q1:{label:"Для карти: у якій країні та регіоні/області ти живеш?", ph:"Наприклад: Україна, Київ, Бровари"},
+  q2:{label:"Де ти живеш?", options:["У Пенедес (Vilafranca, Sant Sadurní, Vilanova і довкола)","У Барселоні або поряд","В іншій частині Каталонії (Жирона/Коста-Брава, Таррагона, Льєйда…)","В іншому регіоні Іспанії","В іншій країні"]},
+  a1:{label:"Винарні поруч із тобою — ти їх знаєш?", options:["Так, можу назвати — бував там","Знаю, що є, але пригадати не можу","Ні, не знаю таких — і це нормально"]},
+  a2:{label:"Якщо можеш — впиши яку.", ph:"Назва винарні"},
+  a3:{label:"За останні 12 місяців бував на винарні чи дегустації в Каталонії?", options:["Так, у своїй зоні","Так, в іншій","Ні"]},
+  b1:{label:"Бував у винних регіонах Каталонії (Пенедес, Пріорат, Алелья…)?", options:["Так, бував","Ні, але хотілося б","Ні, і думки не було"]},
+  b2:{label:"Коли їдеш у винний регіон, що для тебе найважливіше?", hint:"До 3", options:["Якість вин","Екскурсія по льоху/історія","Розмова з виноробом","Пейзаж/краєвиди","Їжа/гастрономія","Ціна/співвідношення","Атмосфера місця","Я не їжджу у винні регіони"]},
+  b3:{label:"Який у тебе зв'язок із Каталонією?", options:["Живу тут частину року","Маю дім або рідних тут","Приїжджаю у відпустку","Був один раз","Жодного разу не був"]},
+  c0:{label:"Чи є поряд із твоїм містом винний або сільський регіон, про який ти чув, але так і не з'їздив?", options:["Так, і бував там","Так, чув, але не був","Немає такого поряд","Не замислювався"]},
+  c1:{label:"Що з цього тобі знайоме?", hint:"Можна кілька", options:["DO Penedès","DO Alella","DO Cava","Via Augusta (давня дорога)","Ruta del Vino","Miravinyes (оглядові серед виноградників)","Нічого з цього — чую вперше"]},
+  c2:{label:"Бувало, що в поїздці ти йшов за готовим маршрутом на день, який хтось склав за тебе (готовий план, карта-паспорт регіону, тур «ідеальний день»)?", options:["Так, і було зручно","Так, але не вразило","Ні, зазвичай складаю сам"]},
+  c3:{label:"Як часто вибираєшся в одноденні поїздки заради вражень?", options:["Раз на місяць або частіше","Кілька разів на рік","Рідко","Майже ніколи"]},
+  c4:{label:"Що приваблює в такій поїздці?", hint:"До 3", options:["Вино/ігристе","Гастрономія","Природа, хайкінг","Вело/байкінг","Подорож авто/кемпером","Історія/спадщина","Сімейний відпочинок","Фести/події","Компанія/друзі","Гарні місця/фото"]},
+  c5:{label:"Як ти ставишся до вина?", options:["Люблю, розбираюся","П'ю із задоволенням, але не заглиблююся","П'ю рідко, за нагоди","Вино не моє (але інший алкоголь п'ю)","Не п'ю алкоголь взагалі"]},
+  c6:{label:"Скільки часу в один бік нормально заради такої поїздки?", options:["до 30 хв","до 1 год","до 1,5 год","більше"]},
+  c7:{label:"Поїхав би без авто (потяг/автобус)?", options:["Так, легко","Тільки якщо зручно дістатися","Ні, потрібне авто"]},
+  c8:{label:"Як ти плануєш такі поїздки?", options:["Заздалегідь удома","Спонтанно з телефона в дорозі","Змішано"]},
+  c9:{label:"Чим реально користуєшся, коли плануєш поїздку за місто або шукаєш місця?", hint:"До 3", options:["Google/карти","Соцмережі (Insta/TikTok)","Друзі/родина","Outdoor-застосунки (Komoot/Wikiloc/AllTrails)","Вино/їжа (Vivino/TheFork)","Платформи турів (GetYourGuide/Viator)","Офіційні сайти регіонів","ШІ (ChatGPT тощо)","Ніяк, усе через пошуковик"]},
+  c10:{label:"Що найчастіше заважає вибратися?", hint:"До 3", other:"Інше:", options:["Не знаю куди їхати / немає часу шукати","Складна логістика (дістатися/бронь)","Дорого","Нема з ким / важко зібрати компанію","Нічого, я й так вибираюся"]},
+  c11:{label:"Хочеш щось додати?", ph:"За бажанням"},
+  email:{label:"Email — щоб надіслати нові путівники та повідомити про запуск (за бажанням)", gdpr:"Email за бажанням: путівник ти і так отримаєш наприкінці. Пошта потрібна лише щоб надіслати нові путівники та повідомити про запуск. Зберігаємо в себе, не передаємо третім особам. Захочеш видалити — напиши на penedesvino1@gmail.com, приберемо без питань.", ph:"name@email.com"},
+  edad:{label:"Вік", options:["18–25","26–35","36–45","46–55","56–65","65+","Не хочу вказувати"]},
+  genero:{label:"Стать", options:["Чоловіча","Жіноча","Інше","Не хочу вказувати"]},
+  ui:{required:"Будь ласка, дай відповідь на позначені питання ↑", max:"Можна обрати не більше трьох", emailBad:"Перевір адресу email", sending:"Надсилаю…", send:"Надіслати відповіді", thanksTitle:"Дякую!", thanksGift:"Твій подарунок — путівник «{guia}».", openGuide:"Відкрити путівник →"}
+ },
+
+ ru:{
+  brand:"Penedés · Исследование",
+  intro:"Привет! Найдётся 2–3 минуты?\n\nМы исследуем, как люди выбирают однодневные поездки и отдых за городом. Наш главный пример — живописный регион Пенедес (Penedés) под Барселоной, знаменитый винодельнями, историей и природой.\n\nНеважно, где ты живёшь и был ли в Каталонии:\n• местный или экспат — нам интересен твой опыт отдыха рядом с домом;\n• живёшь в другой стране или слышишь о Пенедесе впервые — нам важно, как ты вообще планируешь такие поездки.\n\nОпрос анонимный. В конце всех ждёт подарок — готовый гид на один день по городку Sant Sadurní d'Anoia. Email — по желанию, в самом конце.",
+  q1:{label:"Для карты: в какой стране и регионе/провинции ты живёшь?", ph:"Например: Испания, Каталония"},
+  q2:{label:"Где ты живёшь?", options:["В Пенедес (Vilafranca, Sant Sadurní, Vilanova и вокруг)","В Барселоне или рядом с ней","В другом месте Каталонии (Жирона/Коста-Брава, Таррагона, Льейда…)","В другом регионе Испании","В другой стране"]},
+  a1:{label:"Винодельни рядом с тобой — ты их знаешь?", options:["Да, могу назвать — бывал там","Знаю, что есть, но вспомнить не могу","Нет, не знаю таких — и это нормально"]},
+  a2:{label:"Если можешь — впиши какую.", ph:"Название винодельни"},
+  a3:{label:"За последние 12 месяцев доводилось бывать на винодельне или дегустации в Каталонии?", options:["Да, в своей зоне","Да, в другой","Нет"]},
+  b1:{label:"Доводилось бывать в винных регионах Каталонии (Пенедес, Приорат, Алелья…)?", options:["Да, доводилось","Нет, но хотелось бы","Нет, и мысли не было"]},
+  b2:{label:"Когда едешь в винный регион, что для тебя важнее всего?", hint:"До 3", options:["Качество вин","Экскурсия по погребу/история","Разговор с виноделом","Пейзаж/виды","Еда/гастрономия","Цена/соотношение","Атмосфера места","Я не езжу в винные регионы"]},
+  b3:{label:"Какая у тебя связь с Каталонией?", options:["Живу здесь часть года","Есть дом или родня здесь","Приезжаю в отпуск","Был один раз","Ни разу не был"]},
+  c0:{label:"Есть ли рядом с твоим городом винный или деревенский регион, о котором ты слышал, но куда так и не съездил?", options:["Да, и бывал там","Да, слышал, но не был","Нет такого рядом","Не задумывался"]},
+  c1:{label:"Что из этого тебе знакомо?", hint:"Можно несколько", options:["DO Penedès","DO Alella","DO Cava","Via Augusta (древняя дорога)","Ruta del Vino","Miravinyes (смотровые среди виноградников)","Ничего из этого — впервые слышу"]},
+  c2:{label:"Бывало, что в поездке ты шёл по готовому маршруту на день — который кто-то собрал за тебя (готовый план, карта-паспорт региона, тур «идеальный день»)?", options:["Да, и было удобно","Да, но не впечатлило","Нет, обычно собираю сам"]},
+  c3:{label:"Как часто выбираешься на однодневные поездки ради впечатлений?", options:["Раз в месяц или чаще","Несколько раз в год","Редко","Почти никогда"]},
+  c4:{label:"Что притягивает в такой поездке?", hint:"До 3", options:["Вино/игристое","Гастрономия","Природа, хайкинг","Вело/байкинг","Путешествие на авто/кемпере","История/наследие","Семейный досуг","Фесты/события","Компания/друзья","Красивые места/фото"]},
+  c5:{label:"Как ты относишься к вину?", options:["Люблю, разбираюсь","Пью с удовольствием, но не углубляюсь","Пью редко, по случаю","Вино не моё (но другой алкоголь пью)","Не пью алкоголь вообще"]},
+  c6:{label:"Сколько времени в одну сторону нормально ради такой поездки?", options:["до 30 мин","до 1 ч","до 1,5 ч","больше"]},
+  c7:{label:"Поехал бы без машины (поезд/автобус)?", options:["Да, легко","Только если удобно добираться","Нет, нужна машина"]},
+  c8:{label:"Как ты планируешь такие поездки?", options:["Заранее дома","Спонтанно с телефона в дороге","Смешанно"]},
+  c9:{label:"Чем реально пользуешься, когда планируешь поездку за город или ищешь места?", hint:"До 3", options:["Google/карты","Соцсети (Insta/TikTok)","Друзья/семья","Outdoor-приложения (Komoot/Wikiloc/AllTrails)","Вино/еда (Vivino/TheFork)","Платформы туров (GetYourGuide/Viator)","Официальные сайты регионов","ИИ (ChatGPT и т.п.)","Никак, всё через поисковик"]},
+  c10:{label:"Что чаще всего мешает выбраться?", hint:"До 3", other:"Другое:", options:["Не знаю куда ехать / нет времени искать","Сложная логистика (добраться/бронь)","Дорого","Не с кем / трудно собрать компанию","Ничего, я и так выбираюсь"]},
+  c11:{label:"Хочешь что-то добавить?", ph:"По желанию"},
+  email:{label:"Email — чтобы прислать новые гиды и сообщить о запуске (по желанию)", gdpr:"Email — по желанию: гид ты и так получишь в конце. Почта нужна только чтобы прислать новые гиды и сообщить о запуске. Храним у себя, не передаём третьим лицам. Захочешь удалить — напиши на penedesvino1@gmail.com, уберём без вопросов.", ph:"name@email.com"},
+  edad:{label:"Возраст", options:["18–25","26–35","36–45","46–55","56–65","65+","Не хочу указывать"]},
+  genero:{label:"Пол", options:["Мужской","Женский","Другое","Не хочу указывать"]},
+  ui:{required:"Пожалуйста, ответь на отмеченные вопросы ↑", max:"Можно выбрать не больше трёх", emailBad:"Проверь адрес email", sending:"Отправляю…", send:"Отправить ответы", thanksTitle:"Спасибо!", thanksGift:"Твой подарок — гид «{guia}».", openGuide:"Открыть гид →"}
+ }
+};
+
+/* ===== 4. ДВИЖОК ===== */
+function qs(s){ return new URLSearchParams(location.search).get(s) || ""; }
+var LANG = (qs("lang") || (navigator.language||"es").slice(0,2)).toLowerCase();
+if(!DICT[LANG]) LANG = "es";
+var T = DICT[LANG];
+var WHO = qs("who");
+var CHANNEL = qs("channel");
+var SID = qs("sid") || genSid();
+function genSid(){ try{ return crypto.randomUUID(); }catch(e){ return "s"+Date.now().toString(36)+Math.random().toString(36).slice(2,8); } }
+document.documentElement.lang = LANG;
+
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t;} return a; }
+var branch = null;
+
+document.querySelector(".brand").textContent = T.brand;
+document.getElementById("intro").textContent = T.intro;
+document.getElementById("btnSend").textContent = T.ui.send;
+
+/* --- панель языков --- */
+(function(){
+  var bar=document.getElementById("langbar");
+  LANG_ORDER.forEach(function(l){
+    var b=document.createElement("button"); b.textContent=LANG_NAMES[l];
+    if(l===LANG) b.className="on";
+    b.addEventListener("click", function(){ var p=new URLSearchParams(location.search); p.set("lang", l); location.search=p.toString(); });
+    bar.appendChild(b);
+  });
+})();
+
+var form = document.getElementById("form");
+
+QUESTIONS.forEach(function(q){
+  var d = T[q.id]; if(!d) return;
+  var box = document.createElement("div");
+  box.className = "q"; box.id = "q_"+q.id;
+  if(q.branch==="A" || q.branch==="B") box.classList.add("hidden");
+
+  var h = document.createElement("h3");
+  h.innerHTML = esc(d.label) + (q.required ? '<span class="req">*</span>' : '');
+  box.appendChild(h);
+  if(d.hint){ var hint=document.createElement("div"); hint.className="hint"; hint.textContent=d.hint; box.appendChild(hint); }
+
+  if(q.type==="text"){
+    var inp=document.createElement("input"); inp.type="text"; inp.name=q.id; if(d.ph) inp.placeholder=d.ph;
+    box.appendChild(inp);
+  } else if(q.type==="email"){
+    var ie=document.createElement("input"); ie.type="email"; ie.name=q.id; if(d.ph) ie.placeholder=d.ph;
+    box.appendChild(ie);
+    if(d.gdpr){ var g=document.createElement("div"); g.className="gdpr"; g.textContent=d.gdpr; box.appendChild(g); }
+  } else if(q.type==="select"){
+    var sel=document.createElement("select"); sel.name=q.id;
+    var o0=document.createElement("option"); o0.value=""; o0.textContent="—"; sel.appendChild(o0);
+    d.options.forEach(function(op){ var o=document.createElement("option"); o.value=op; o.textContent=op; sel.appendChild(o); });
+    box.appendChild(sel);
+  } else {
+    var opts = q.shuffle ? shuffle(d.options) : d.options;
+    opts.forEach(function(op){ box.appendChild(makeOpt(q, op)); });
+    if(q.other){
+      box.appendChild(makeOpt(q, d.other, true));
+      var extra=document.createElement("input"); extra.type="text"; extra.className="otro"; extra.name=q.id+"_otro"; extra.placeholder="…"; extra.style.display="none"; extra.id="otro_"+q.id;
+      box.appendChild(extra);
+    }
+    var warn=document.createElement("div"); warn.className="warn"; warn.id="warn_"+q.id; warn.textContent=T.ui.max;
+    box.appendChild(warn);
+  }
+  form.appendChild(box);
+});
+
+function makeOpt(q, text, isOther){
+  var lab=document.createElement("label"); lab.className="opt";
+  var inp=document.createElement("input");
+  inp.type = (q.type==="checkbox") ? "checkbox" : "radio";
+  inp.name = q.id; inp.value = isOther ? "__OTRO__" : text;
+  var span=document.createElement("span"); span.textContent=text;
+  lab.appendChild(inp); lab.appendChild(span);
+  inp.addEventListener("change", function(){
+    if(q.type==="radio"){
+      form.querySelectorAll('input[name="'+q.id+'"]').forEach(function(x){ x.closest("label").classList.toggle("sel", x.checked); });
+    } else { lab.classList.toggle("sel", inp.checked); }
+    if(q.max){
+      var checked=form.querySelectorAll('input[name="'+q.id+'"]:checked');
+      var w=document.getElementById("warn_"+q.id);
+      if(checked.length > q.max){ inp.checked=false; lab.classList.remove("sel"); if(w){ w.classList.add("show"); setTimeout(function(){ w.classList.remove("show"); },2500); } }
+    }
+    if(isOther){ var ex=document.getElementById("otro_"+q.id); if(ex) ex.style.display = inp.checked ? "block":"none"; }
+    if(q.fork){ applyFork(inp.value); }
+  });
+  return lab;
+}
+
+function applyFork(val){
+  branch = (val === DICT[LANG].q2.options[0]) ? "A" : "B";
+  QUESTIONS.forEach(function(q){
+    if(q.branch==="A") document.getElementById("q_"+q.id).classList.toggle("hidden", branch!=="A");
+    if(q.branch==="B") document.getElementById("q_"+q.id).classList.toggle("hidden", branch!=="B");
+  });
+}
+
+document.getElementById("btnSend").addEventListener("click", enviar);
+function visible(q){ return q.branch==="all" || q.branch===branch; }
+
+function enviar(){
+  var hp=document.getElementById("hp_url"); if(hp && hp.value){ mostrarGracias(); return; }
+  var msg=document.getElementById("msgGlobal"); msg.textContent="";
+  var firstBad=null;
+  for(var i=0;i<QUESTIONS.length;i++){
+    var q=QUESTIONS[i]; if(!visible(q) || !q.required || q.type==="email") continue;
+    if(!getVal(q)){ if(!firstBad) firstBad=q; }
+  }
+  var em=form.querySelector('input[name="email"]');
+  if(em && em.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)){
+    msg.textContent=T.ui.emailBad; em.scrollIntoView({behavior:"smooth",block:"center"}); return;
+  }
+  if(firstBad){
+    msg.textContent=T.ui.required;
+    document.getElementById("q_"+firstBad.id).scrollIntoView({behavior:"smooth",block:"center"}); return;
+  }
+  var data={ sid:SID, idioma:LANG, who:WHO, channel:CHANNEL };
+  QUESTIONS.forEach(function(q){
+    data[q.id] = visible(q) ? getVal(q) : "";
+    if(q.other){ var ex=document.getElementById("otro_"+q.id); data[q.id+"_otro"] = (visible(q)&&ex)?ex.value:""; }
+  });
+  var btn=document.getElementById("btnSend"); btn.disabled=true; btn.textContent=T.ui.sending;
+  fetch(URL_RECEPTOR,{ method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(data) })
+    .then(function(){ mostrarGracias(); }).catch(function(){ mostrarGracias(); });
+}
+
+function getVal(q){
+  if(q.type==="text"||q.type==="email"){ var e=form.querySelector('[name="'+q.id+'"]'); return e?e.value.trim():""; }
+  if(q.type==="select"){ var s=form.querySelector('[name="'+q.id+'"]'); return s?s.value:""; }
+  if(q.type==="radio"){ var r=form.querySelector('input[name="'+q.id+'"]:checked'); return r?r.value:""; }
+  if(q.type==="checkbox"){
+    var arr=[]; form.querySelectorAll('input[name="'+q.id+'"]:checked').forEach(function(x){
+      if(x.value==="__OTRO__"){ var ex=document.getElementById("otro_"+q.id); var ol=(T[q.id]&&T[q.id].other)?T[q.id].other:"Otro:"; arr.push(ol+" "+(ex?ex.value:"")); }
+      else arr.push(x.value);
+    });
+    return arr.join(" · ");
+  }
+  return "";
+}
+
+function mostrarGracias(){
+  document.getElementById("encuesta").style.display="none";
+  var g=GUIAS[LANG]||GUIAS.es;
+  document.getElementById("grTitle").textContent=T.ui.thanksTitle;
+  document.getElementById("grText").textContent=T.ui.thanksGift.replace("{guia}", g.name);
+  var sep=(g.url.indexOf("?")>=0)?"&":"?";
+  var extra="sid="+encodeURIComponent(SID)+"&lang="+encodeURIComponent(LANG)+(WHO?"&who="+encodeURIComponent(WHO):"")+(CHANNEL?"&channel="+encodeURIComponent(CHANNEL):"");
+  var a=document.getElementById("grLink"); a.href=g.url+sep+extra; a.textContent=T.ui.openGuide;
+  document.getElementById("gracias").style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+document.getElementById("privacyNote").textContent = PRIV[LANG]||PRIV.es;
+</script>
+</body>
+</html>
