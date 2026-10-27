@@ -727,5 +727,53 @@
 })();
 </script>
 
+<!-- Аналитика взаимодействия с гидом (анонимно, по sid из опроса; без куки) -->
+<script>
+(function(){
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbyUy1xXdbacYn0swukvky7qXRHvcqBeTpt2zFWw038kcIaVzMyY9xFrl5f46ioCw0L_/exec";
+  var p = new URLSearchParams(location.search);
+  var base = {
+    tipo:"guia",
+    sid: p.get("sid")||"",
+    lang: p.get("lang")||document.documentElement.lang||"",
+    who: p.get("who")||"",
+    channel: p.get("channel")||"",
+    page: location.pathname.split("/").pop()||"index"
+  };
+  var t0=Date.now(), maxScroll=0, practicaEnviado=false;
+  function pct(){ var h=document.documentElement.scrollHeight-innerHeight; return h>0?Math.round(scrollY/h*100):0; }
+  addEventListener("scroll",function(){ var v=pct(); if(v>maxScroll)maxScroll=v; },{passive:true});
+  function send(ev, detalle){
+    var d=Object.assign({},base,{evento:ev,detalle:detalle||"",segundos:Math.round((Date.now()-t0)/1000),scroll_pct:maxScroll});
+    var body=JSON.stringify(d);
+    try{
+      if(ev==="cierre"&&navigator.sendBeacon){
+        navigator.sendBeacon(ENDPOINT,new Blob([body],{type:"text/plain;charset=utf-8"}));
+      } else {
+        fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:body});
+      }
+    }catch(e){}
+  }
+  send("open");
+  var prac=document.querySelector(".practice__intro")||document.getElementById("praktika");
+  if(prac && "IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting && !practicaEnviado){ practicaEnviado=true; send("practica"); io.disconnect(); } });
+    },{threshold:0.4});
+    io.observe(prac);
+  }
+  document.addEventListener("click",function(e){
+    var b=e.target.closest(".btn, .orient a");
+    if(!b) return;
+    var act=b.getAttribute("data-action")||"ancla";
+    var card=b.closest(".act-card");
+    var name=card ? (card.querySelector(".act-card__name")||{}).textContent : (b.textContent||"");
+    send("click", act+" · "+(name||"").trim());
+  });
+  document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="hidden") send("cierre"); });
+  addEventListener("pagehide",function(){ send("cierre"); });
+})();
+</script>
+
 </body>
 </html>
