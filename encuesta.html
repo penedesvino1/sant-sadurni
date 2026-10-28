@@ -85,9 +85,12 @@ var PRIV = {
   ru:"Мы считаем анонимную статистику использования. Без куки, без личных данных."
 };
 
+var COUNTRIES = ["ES","UA","DE","GB","IE","PL","CZ","NL","BE","FR","IT","PT","AT","BG","GE","US","CA","MX","BR","AR","OTRO"];
+
 /* ===== 2. СТРУКТУРА (одна на все языки) ===== */
 var QUESTIONS = [
-  { id:"q1",  type:"text",     branch:"all", required:false },
+  { id:"pais", type:"select", branch:"all", required:false, coded:true },
+  { id:"cp",   type:"text",   branch:"all", required:false },
   { id:"q2",  type:"radio",    branch:"all", required:true, fork:true },
   { id:"a1",  type:"radio",    branch:"A",   required:true },
   { id:"a2",  type:"text",     branch:"A",   required:false },
@@ -116,8 +119,9 @@ var QUESTIONS = [
 var DICT = {
  es:{
   brand:"Penedés · Investigación",
-  intro:"¡Hola! ¿Tienes 2–3 minutos?\n\nEstamos investigando cómo elige la gente sus escapadas de un día y sus salidas fuera de la ciudad. Nuestro ejemplo principal es la preciosa comarca del Penedés, junto a Barcelona, famosa por sus bodegas, su historia y su naturaleza.\n\nNo importa dónde vivas ni si has estado en Cataluña:\n• si eres de aquí o expatriado, nos interesa tu experiencia de ocio cerca de casa;\n• si vives en otro país o es la primera vez que oyes «Penedés», queremos saber cómo planificas este tipo de salidas.\n\nLa encuesta es anónima. Al final, un regalo para todos: una guía de un día de Sant Sadurní d'Anoia. El email, opcional, al final.",
-  q1:{label:"Para el mapa: ¿en qué país y región/provincia vives?", ph:"Por ejemplo: España, Cataluña"},
+  intro:"¡Hola! ¿Tienes 2–3 minutos?\n\nEstamos investigando cómo elige la gente sus escapadas de un día y sus salidas fuera de la ciudad. Nuestro ejemplo principal es la preciosa comarca del Penedés, junto a Barcelona, famosa por sus bodegas, su gastronomía, su historia, su naturaleza y sus fiestas.\n\nNo importa dónde vivas ni si has estado en Cataluña:\n• si eres de aquí o expatriado, nos interesa tu experiencia de ocio cerca de casa;\n• si vives en otro país o es la primera vez que oyes «Penedés», queremos saber cómo planificas este tipo de salidas.\n\nLa encuesta es anónima. Al final, un regalo para todos: una guía de un día de Sant Sadurní d'Anoia. El email, opcional, al final.",
+  pais:{label:"¿En qué país vives?", options:["España","Ucrania","Alemania","Reino Unido","Irlanda","Polonia","República Checa","Países Bajos","Bélgica","Francia","Italia","Portugal","Austria","Bulgaria","Georgia","Estados Unidos","Canadá","México","Brasil","Argentina","Otro país"]},
+  cp:{label:"Código postal (opcional)", ph:"Ej.: 08770"},
   q2:{label:"¿Dónde vives?", options:["En el Penedés (Vilafranca, Sant Sadurní, Vilanova y alrededores)","En Barcelona o cerca","En otra zona de Cataluña (Girona/Costa Brava, Tarragona, Lleida…)","En otra región de España","En otro país"]},
   a1:{label:"Las bodegas cercanas, ¿las conoces?", options:["Sí, podría nombrarlas — he estado","Sé que existen, pero no las recuerdo","No, no conozco ninguna — y es normal"]},
   a2:{label:"Si puedes, escribe cuál.", ph:"Nombre de la bodega"},
@@ -145,8 +149,9 @@ var DICT = {
 
  ca:{
   brand:"Penedès · Recerca",
-  intro:"Hola! Tens 2–3 minuts?\n\nEstem investigant com tria la gent les escapades d'un dia i les sortides fora de la ciutat. El nostre exemple principal és la preciosa comarca del Penedès, al costat de Barcelona, coneguda pels seus cellers, la seva història i la seva natura.\n\nTant se val on visquis ni si has estat a Catalunya:\n• si ets d'aquí o expatriat, ens interessa la teva experiència de lleure a prop de casa;\n• si vius en un altre país o sents «Penedès» per primera vegada, volem saber com planifiques aquest tipus de sortides.\n\nL'enquesta és anònima. Al final, un regal per a tothom: una guia d'un dia de Sant Sadurní d'Anoia. L'email, opcional, al final.",
-  q1:{label:"Per al mapa: a quin país i regió/província vius?", ph:"Per exemple: Espanya, Catalunya"},
+  intro:"Hola! Tens 2–3 minuts?\n\nEstem investigant com tria la gent les escapades d'un dia i les sortides fora de la ciutat. El nostre exemple principal és la preciosa comarca del Penedès, al costat de Barcelona, coneguda pels seus cellers, la seva gastronomia, la seva història, la seva natura i les seves festes.\n\nTant se val on visquis ni si has estat a Catalunya:\n• si ets d'aquí o expatriat, ens interessa la teva experiència de lleure a prop de casa;\n• si vius en un altre país o sents «Penedès» per primera vegada, volem saber com planifiques aquest tipus de sortides.\n\nL'enquesta és anònima. Al final, un regal per a tothom: una guia d'un dia de Sant Sadurní d'Anoia. L'email, opcional, al final.",
+  pais:{label:"En quin país vius?", options:["Espanya","Ucraïna","Alemanya","Regne Unit","Irlanda","Polònia","Txèquia","Països Baixos","Bèlgica","França","Itàlia","Portugal","Àustria","Bulgària","Geòrgia","Estats Units","Canadà","Mèxic","Brasil","Argentina","Altre país"]},
+  cp:{label:"Codi postal (opcional)", ph:"Ex.: 08770"},
   q2:{label:"On vius?", options:["Al Penedès (Vilafranca, Sant Sadurní, Vilanova i voltants)","A Barcelona o a prop","En una altra zona de Catalunya (Girona/Costa Brava, Tarragona, Lleida…)","En una altra regió d'Espanya","En un altre país"]},
   a1:{label:"Els cellers propers, els coneixes?", options:["Sí, en podria dir — hi he estat","Sé que existeixen, però no en recordo cap","No, no en conec cap — i és normal"]},
   a2:{label:"Si pots, escriu quin.", ph:"Nom del celler"},
@@ -174,8 +179,9 @@ var DICT = {
 
  en:{
   brand:"Penedés · Research",
-  intro:"Hi! Got 2–3 minutes?\n\nWe're researching how people choose day trips and getaways out of the city. Our main example is the beautiful Penedés region near Barcelona, known for its wineries, history and nature.\n\nIt doesn't matter where you live or whether you've been to Catalonia:\n• local or expat — we're interested in how you spend leisure time near home;\n• in another country, or hearing «Penedés» for the first time — we want to know how you plan trips like these.\n\nThe survey is anonymous. At the end, a gift for everyone: a ready one-day guide to Sant Sadurní d'Anoia. Email optional, at the end.",
-  q1:{label:"For the map: which country and region/state do you live in?", ph:"e.g. New York, USA"},
+  intro:"Hi! Got 2–3 minutes?\n\nWe're researching how people choose day trips and getaways out of the city. Our main example is the beautiful Penedés region near Barcelona, known for its wineries, gastronomy, history, nature and festivals.\n\nIt doesn't matter where you live or whether you've been to Catalonia:\n• local or expat — we're interested in how you spend leisure time near home;\n• in another country, or hearing «Penedés» for the first time — we want to know how you plan trips like these.\n\nThe survey is anonymous. At the end, a gift for everyone: a ready one-day guide to Sant Sadurní d'Anoia. Email optional, at the end.",
+  pais:{label:"Which country do you live in?", options:["Spain","Ukraine","Germany","United Kingdom","Ireland","Poland","Czech Republic","Netherlands","Belgium","France","Italy","Portugal","Austria","Bulgaria","Georgia","United States","Canada","Mexico","Brazil","Argentina","Other country"]},
+  cp:{label:"Postal / ZIP code (optional)", ph:"e.g. 10001"},
   q2:{label:"Where do you live?", options:["In the Penedés (Vilafranca, Sant Sadurní, Vilanova and around)","In or near Barcelona","Elsewhere in Catalonia (Girona/Costa Brava, Tarragona, Lleida…)","In another region of Spain","In another country"]},
   a1:{label:"Do you know the wineries near you?", options:["Yes, I could name them — I've been","I know they exist, but can't recall any","No, I don't know any — and that's fine"]},
   a2:{label:"If you can, write which one.", ph:"Winery name"},
@@ -203,8 +209,9 @@ var DICT = {
 
  de:{
   brand:"Penedés · Studie",
-  intro:"Hallo! Hast du 2–3 Minuten?\n\nWir erforschen, wie Menschen Tagesausflüge und Auszeiten aufs Land wählen. Unser Hauptbeispiel ist die schöne Region Penedés bei Barcelona, bekannt für ihre Weingüter, ihre Geschichte und ihre Natur.\n\nEgal, wo du wohnst oder ob du schon in Katalonien warst:\n• ob einheimisch oder zugezogen — uns interessiert, wie du deine Freizeit in der Nähe verbringst;\n• wohnst du in einem anderen Land oder hörst «Penedés» zum ersten Mal — uns interessiert, wie du solche Ausflüge planst.\n\nDie Umfrage ist anonym. Am Ende ein Geschenk für alle: ein fertiger Ein-Tages-Guide für Sant Sadurní d'Anoia. E-Mail optional, am Ende.",
-  q1:{label:"Für die Karte: In welchem Land und welcher Region/welchem Bundesland wohnst du?", ph:"z. B. Deutschland, Berlin"},
+  intro:"Hallo! Hast du 2–3 Minuten?\n\nWir erforschen, wie Menschen Tagesausflüge und Auszeiten aufs Land wählen. Unser Hauptbeispiel ist die schöne Region Penedés bei Barcelona, bekannt für ihre Weingüter, ihre Gastronomie, ihre Geschichte, ihre Natur und ihre Feste.\n\nEgal, wo du wohnst oder ob du schon in Katalonien warst:\n• ob einheimisch oder zugezogen — uns interessiert, wie du deine Freizeit in der Nähe verbringst;\n• wohnst du in einem anderen Land oder hörst «Penedés» zum ersten Mal — uns interessiert, wie du solche Ausflüge planst.\n\nDie Umfrage ist anonym. Am Ende ein Geschenk für alle: ein fertiger Ein-Tages-Guide für Sant Sadurní d'Anoia. E-Mail optional, am Ende.",
+  pais:{label:"In welchem Land wohnst du?", options:["Spanien","Ukraine","Deutschland","Vereinigtes Königreich","Irland","Polen","Tschechien","Niederlande","Belgien","Frankreich","Italien","Portugal","Österreich","Bulgarien","Georgien","USA","Kanada","Mexiko","Brasilien","Argentinien","Anderes Land"]},
+  cp:{label:"Postleitzahl (optional)", ph:"z. B. 10115"},
   q2:{label:"Wo wohnst du?", options:["Im Penedés (Vilafranca, Sant Sadurní, Vilanova und Umgebung)","In oder bei Barcelona","Woanders in Katalonien (Girona/Costa Brava, Tarragona, Lleida…)","In einer anderen Region Spaniens","In einem anderen Land"]},
   a1:{label:"Kennst du die Weingüter in deiner Nähe?", options:["Ja, ich könnte welche nennen — war dort","Ich weiß, dass es sie gibt, erinnere mich aber nicht","Nein, ich kenne keine — und das ist okay"]},
   a2:{label:"Wenn du kannst, schreib welches.", ph:"Name des Weinguts"},
@@ -232,8 +239,9 @@ var DICT = {
 
  uk:{
   brand:"Пенедес · Дослідження",
-  intro:"Привіт! Маєш 2–3 хвилини?\n\nМи досліджуємо, як люди обирають одноденні поїздки та відпочинок за містом. Наш головний приклад — мальовничий регіон Пенедес (Penedés) біля Барселони, відомий своїми винарнями, історією та природою.\n\nНеважливо, де ти живеш і чи був у Каталонії:\n• місцевий чи експат — нам цікавий твій досвід відпочинку поряд із домом;\n• живеш в іншій країні або чуєш «Пенедес» уперше — нам важливо зрозуміти, як ти зазвичай плануєш такі поїздки.\n\nОпитування анонімне. Наприкінці на всіх чекає подарунок — готовий путівник на один день по містечку Sant Sadurní d'Anoia. Email — за бажанням, у самому кінці.",
-  q1:{label:"Для карти: у якій країні та регіоні/області ти живеш?", ph:"Наприклад: Україна, Київ, Бровари"},
+  intro:"Привіт! Маєш 2–3 хвилини?\n\nМи досліджуємо, як люди обирають одноденні поїздки та відпочинок за містом. Наш головний приклад — мальовничий регіон Пенедес (Penedés) біля Барселони, відомий своїми винарнями, гастрономією, історією, природою та фестами.\n\nНеважливо, де ти живеш і чи був у Каталонії:\n• місцевий чи експат — нам цікавий твій досвід відпочинку поряд із домом;\n• живеш в іншій країні або чуєш «Пенедес» уперше — нам важливо зрозуміти, як ти зазвичай плануєш такі поїздки.\n\nОпитування анонімне. Наприкінці на всіх чекає подарунок — готовий путівник на один день по містечку Sant Sadurní d'Anoia. Email — за бажанням, у самому кінці.",
+  pais:{label:"У якій країні ти живеш?", options:["Іспанія","Україна","Німеччина","Велика Британія","Ірландія","Польща","Чехія","Нідерланди","Бельгія","Франція","Італія","Португалія","Австрія","Болгарія","Грузія","США","Канада","Мексика","Бразилія","Аргентина","Інша країна"]},
+  cp:{label:"Поштовий індекс (за бажанням)", ph:"Напр.: 02000"},
   q2:{label:"Де ти живеш?", options:["У Пенедес (Vilafranca, Sant Sadurní, Vilanova і довкола)","У Барселоні або поряд","В іншій частині Каталонії (Жирона/Коста-Брава, Таррагона, Льєйда…)","В іншому регіоні Іспанії","В іншій країні"]},
   a1:{label:"Винарні поруч із тобою — ти їх знаєш?", options:["Так, можу назвати — бував там","Знаю, що є, але пригадати не можу","Ні, не знаю таких — і це нормально"]},
   a2:{label:"Якщо можеш — впиши яку.", ph:"Назва винарні"},
@@ -261,8 +269,9 @@ var DICT = {
 
  ru:{
   brand:"Penedés · Исследование",
-  intro:"Привет! Найдётся 2–3 минуты?\n\nМы исследуем, как люди выбирают однодневные поездки и отдых за городом. Наш главный пример — живописный регион Пенедес (Penedés) под Барселоной, знаменитый винодельнями, историей и природой.\n\nНеважно, где ты живёшь и был ли в Каталонии:\n• местный или экспат — нам интересен твой опыт отдыха рядом с домом;\n• живёшь в другой стране или слышишь о Пенедесе впервые — нам важно, как ты вообще планируешь такие поездки.\n\nОпрос анонимный. В конце всех ждёт подарок — готовый гид на один день по городку Sant Sadurní d'Anoia. Email — по желанию, в самом конце.",
-  q1:{label:"Для карты: в какой стране и регионе/провинции ты живёшь?", ph:"Например: Испания, Каталония"},
+  intro:"Привет! Найдётся 2–3 минуты?\n\nМы исследуем, как люди выбирают однодневные поездки и отдых за городом. Наш главный пример — живописный регион Пенедес (Penedés) под Барселоной, знаменитый винодельнями, гастрономией, историей, природой и фестами.\n\nНеважно, где ты живёшь и был ли в Каталонии:\n• местный или экспат — нам интересен твой опыт отдыха рядом с домом;\n• живёшь в другой стране или слышишь о Пенедесе впервые — нам важно, как ты вообще планируешь такие поездки.\n\nОпрос анонимный. В конце всех ждёт подарок — готовый гид на один день по городку Sant Sadurní d'Anoia. Email — по желанию, в самом конце.",
+  pais:{label:"В какой стране ты живёшь?", options:["Испания","Украина","Германия","Великобритания","Ирландия","Польша","Чехия","Нидерланды","Бельгия","Франция","Италия","Португалия","Австрия","Болгария","Грузия","США","Канада","Мексика","Бразилия","Аргентина","Другая страна"]},
+  cp:{label:"Почтовый индекс (по желанию)", ph:"Напр.: 08770"},
   q2:{label:"Где ты живёшь?", options:["В Пенедес (Vilafranca, Sant Sadurní, Vilanova и вокруг)","В Барселоне или рядом с ней","В другом месте Каталонии (Жирона/Коста-Брава, Таррагона, Льейда…)","В другом регионе Испании","В другой стране"]},
   a1:{label:"Винодельни рядом с тобой — ты их знаешь?", options:["Да, могу назвать — бывал там","Знаю, что есть, но вспомнить не могу","Нет, не знаю таких — и это нормально"]},
   a2:{label:"Если можешь — впиши какую.", ph:"Название винодельни"},
@@ -297,6 +306,7 @@ var T = DICT[LANG];
 var WHO = qs("who");
 var CHANNEL = qs("channel");
 var SID = qs("sid") || genSid();
+var TZ = ""; try{ TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; }catch(e){}
 function genSid(){ try{ return crypto.randomUUID(); }catch(e){ return "s"+Date.now().toString(36)+Math.random().toString(36).slice(2,8); } }
 document.documentElement.lang = LANG;
 
@@ -341,7 +351,7 @@ QUESTIONS.forEach(function(q){
   } else if(q.type==="select"){
     var sel=document.createElement("select"); sel.name=q.id;
     var o0=document.createElement("option"); o0.value=""; o0.textContent="—"; sel.appendChild(o0);
-    d.options.forEach(function(op){ var o=document.createElement("option"); o.value=op; o.textContent=op; sel.appendChild(o); });
+    d.options.forEach(function(op,i){ var o=document.createElement("option"); o.value=q.coded?COUNTRIES[i]:op; o.textContent=op; sel.appendChild(o); });
     box.appendChild(sel);
   } else {
     var opts = q.shuffle ? shuffle(d.options) : d.options;
@@ -406,7 +416,7 @@ function enviar(){
     msg.textContent=T.ui.required;
     document.getElementById("q_"+firstBad.id).scrollIntoView({behavior:"smooth",block:"center"}); return;
   }
-  var data={ sid:SID, idioma:LANG, who:WHO, channel:CHANNEL };
+  var data={ sid:SID, idioma:LANG, who:WHO, channel:CHANNEL, tz:TZ };
   QUESTIONS.forEach(function(q){
     data[q.id] = visible(q) ? getVal(q) : "";
     if(q.other){ var ex=document.getElementById("otro_"+q.id); data[q.id+"_otro"] = (visible(q)&&ex)?ex.value:""; }
